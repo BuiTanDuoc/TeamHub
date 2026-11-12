@@ -23,6 +23,9 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
     public DbSet<Bug> Bugs => Set<Bug>();
     public DbSet<BugStatusHistory> BugStatusHistories => Set<BugStatusHistory>();
 
+    // Chỉ dùng nội bộ trong Infrastructure (AuthService), không đưa vào IAppDbContext
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
     // Dùng property trên context để EF tham số hóa theo từng request, không "đóng băng" giá trị vào model cache.
     private Guid? CurrentUserId => currentUser.UserId;
     private bool IsSystemAdmin => currentUser.IsSystemAdmin;

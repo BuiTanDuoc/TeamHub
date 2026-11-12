@@ -64,7 +64,7 @@ TeamHub.Domain/
 ```
 TeamHub.Application/
 ├── Common/
-│   ├── Abstractions/  # IAppDbContext, ICurrentUser, IFileStorage, IEmailSender, IClock, IPushSender
+│   ├── Abstractions/  # IAppDbContext, ICurrentUser, IFileStorage, IEmailSender, IPushSender
 │   ├── Behaviors/     # ValidationBehavior, AuthorizationBehavior, LoggingBehavior
 │   ├── Exceptions/    # NotFoundException, ForbiddenException, ValidationException
 │   └── Models/        # PagedResult<T>, Result<T>
@@ -101,7 +101,7 @@ TeamHub.Infrastructure/
 TeamHub.Api/
 ├── Endpoints/        # Minimal API, nhóm theo feature (TeamsEndpoints, BugsEndpoints, ...)
 ├── Hubs/             # NotificationHub, BoardHub
-├── Middleware/       # ExceptionHandlingMiddleware (ProblemDetails)
+├── Middleware/       # GlobalExceptionHandler (IExceptionHandler → ProblemDetails)
 ├── Auth/             # CurrentUser, policy, requirement handlers
 ├── appsettings.json
 └── Program.cs
@@ -118,11 +118,15 @@ TeamHub.Api/
 7. Mọi danh sách phải phân trang (ưu tiên keyset pagination cho danh sách lớn).
 8. Nullable reference types bật; không `!` bừa bãi.
 9. `CancellationToken` truyền xuyên suốt đến EF Core.
-10. Ghi quyết định kiến trúc mới vào mục **Nhật ký quyết định** cuối file này.
+10. Thời gian: inject `TimeProvider` (đã đăng ký `TimeProvider.System`), không dùng `DateTime.UtcNow`/`DateTimeOffset.UtcNow` trong Application/Infrastructure.
+11. Ghi quyết định kiến trúc mới vào mục **Nhật ký quyết định** cuối file này.
 
 ## 4. Multi-team và phân quyền
 
 - Một DB dùng chung. Mọi entity thuộc team implement `ITeamScoped` (có `TeamId`).
+- Dùng **named query filters** của EF Core 10: `TeamScope` và `SoftDelete` (xem `QueryFilterNames`). Khi cần bỏ qua một filter, chỉ bỏ đúng filter đó: `.IgnoreQueryFilters([QueryFilterNames.SoftDelete])`.
+- `TeamMember` là bảng nguồn để xác định quyền nên **không có** filter `TeamScope` (tránh đệ quy). Truy vấn `TeamMembers` trực tiếp phải lọc theo `TeamId` sau khi `AuthorizationBehavior` đã xác nhận user thuộc team.
+- Mã hiển thị của task/bug là `{Project.Key}-{Number}`; `Number` cấp từ `Project.ReserveItemNumber()` (dùng chung bộ đếm cho WorkItem và Bug), `RowVersion` của Project chống cấp trùng. Gặp `DbUpdateConcurrencyException` thì thử lại.
 - `AppDbContext` đăng ký **global query filter**: chỉ thấy dữ liệu của các team mà user hiện tại là thành viên. Chỉ dùng `IgnoreQueryFilters()` trong job nền/migration và phải có comment lý do.
 - Vai trò gắn theo **(UserId, TeamId)** trong `TeamMember`, không gắn cố định vào user: `TeamLead`, `Developer`, `Tester`, `Viewer`. `SystemAdmin` là cờ riêng ở `AppUser`.
 - Kiểm tra quyền bằng `AuthorizationBehavior` trong pipeline Mediator: command/query nào cần quyền thì khai báo qua interface `IRequireTeamRole` (khai báo `TeamId` + vai trò tối thiểu). Không check quyền rải rác trong handler.
@@ -133,7 +137,13 @@ TeamHub.Api/
 - Đăng nhập nội bộ (email + mật khẩu) và **Google** (OAuth 2.0/OIDC). Cả hai cùng quy về một `AppUser`; liên kết theo email đã xác minh.
 - Web/Mobile nhận JWT access token (ngắn hạn) + refresh token (xoay vòng, lưu hash trong DB, có thể thu hồi).
 - Mobile lưu token trong `expo-secure-store`; Google login dùng PKCE.
-- Chính sách mật khẩu và thời gian token cấu hình trong `appsettings.json`.
+- Chính sách mật khẩu và thời gian token cấu hình trong `appsettings.json` (mục `Identity`, `Jwt`).
+- **Google:** client (web/mobile) lấy Google ID token rồi gọi `POST /api/v1/auth/google`; server xác thực chữ ký/audience bằng `Google.Apis.Auth`. Chỉ liên kết/tạo tài khoản theo email đã được Google xác minh; có thể giới hạn tên miền qua `Auth:Google:AllowedDomains`.
+- **Refresh token:** xoay vòng, chỉ lưu hash SHA-256. Dùng lại token đã thu hồi → thu hồi toàn bộ phiên của user.
+- **JWT:** `MapInboundClaims = false`, claim user id là `sub` (xem `AppClaims`). `Jwt:SigningKey` KHÔNG nằm trong appsettings.json: dùng user-secrets (dev) hoặc biến môi trường `Jwt__SigningKey` (prod).
+- Mọi endpoint yêu cầu đăng nhập theo mặc định (fallback policy); endpoint công khai phải khai báo `.AllowAnonymous()`.
+- SignalR nhận token qua query `access_token` chỉ cho đường dẫn `/hubs`; không log query string.
+- Tiến trình nền không có user: dùng `.IgnoreQueryFilters([QueryFilterNames.TeamScope])` tường minh kèm comment lý do.
 - Tài khoản mới chỉ vào được team khi được mời (invite link/email) hoặc Admin thêm.
 
 ## 6. Quy trình nghiệp vụ
@@ -208,6 +218,11 @@ dotnet test
 dotnet run --project src/Backend/TeamHub.Api
 dotnet ef database update -p src/Backend/TeamHub.Infrastructure -s src/Backend/TeamHub.Api
 
+# Khởi tạo secrets cho Api (dev)
+dotnet user-secrets set "Jwt:SigningKey" "$(openssl rand -base64 48)" -p src/Backend/TeamHub.Api
+dotnet user-secrets set "Seed:Admin:Email" "admin@example.com" -p src/Backend/TeamHub.Api
+dotnet user-secrets set "Seed:Admin:Password" "<mật khẩu mạnh>" -p src/Backend/TeamHub.Api
+
 # Môi trường dev (SQL Server, ...)
 docker compose up -d
 
@@ -235,14 +250,8 @@ pnpm gen:api
 | 2026-11-12 | Tự xây thay vì dùng Jira/Azure DevOps | Quy trình riêng, kiểm soát dữ liệu |
 | 2026-11-12 | Một DB dùng chung, tách theo `TeamId` + query filter | Quy mô 10–20 người, vận hành đơn giản |
 | 2026-11-12 | Đăng nhập nội bộ + Google | Tiện cho cả tài khoản nội bộ lẫn Google |
+| 2026-11-12 | `AppUser` đặt trong Domain (package `Microsoft.Extensions.Identity.Stores`) | Application join được tên/avatar user mà không phụ thuộc Infrastructure |
+| 2026-11-12 | Named query filters (`TeamScope`, `SoftDelete`) | Bỏ qua từng filter riêng lẻ, không phải tắt hết |
+| 2026-11-12 | Google login qua ID token (client lấy token, server xác thực) | Dùng chung cho web và mobile, không cần cookie/redirect phía server |
+| 2026-11-12 | Fallback policy yêu cầu đăng nhập cho mọi endpoint | An toàn mặc định, quên khai báo cũng không bị lộ |
 | 2026-11-12 | Kanban mặc định, Sprint bật tùy project | Phù hợp team nhỏ, linh hoạt, tránh nặng quy trình |
-
-## Lộ trình gợi ý
-|-------------------------------------------------------------------------------------------------------------------------------------------|
-| Giai đoạn		| Nội dung																		                    | Thời gian ước tính	|
-|---------------|---------------------------------------------------------------------------------------------------|-----------------------|
-| MVP (1)		| Auth, Team, Member/Role, Project, Task + Kanban, Comment, Thông báo trong app						| 6–8 tuần				|
-| MVP (2)		| Bug tracking + workflow, Attachment, Dashboard cá nhân, Mobile bản đầu (xem/cập nhật việc, push)	| 4–6 tuần				|
-| Giai đoạn 3	| Báo cáo định kỳ (Hangfire + email/PDF), Time log, Sprint/burndown, SLA bug						| 4 tuần				|
-| Giai đoạn 4	| Tích hợp Git/CI, test case, import Jira, tối ưu													| Tùy nhu cầu			|
-|---------------|---------------------------------------------------------------------------------------------------|-----------------------|

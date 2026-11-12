@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "TeamHub.Api": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:31034;http://localhost:31035"
+    }
+  }
+}
