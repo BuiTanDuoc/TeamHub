@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../CLAUDE.md" />
+    <File Path="../README.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="src/Backend/TeamHub.Application/TeamHub.Application.csproj" />
+  <Project Path="src/Backend/TeamHub.Domain/TeamHub.Domain.csproj" />
+  <Project Path="src/Backend/TeamHub.Infrastructure/TeamHub.Infrastructure.csproj" />
+</Solution>
