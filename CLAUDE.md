@@ -236,3 +236,13 @@ pnpm gen:api
 | 2026-11-12 | Một DB dùng chung, tách theo `TeamId` + query filter | Quy mô 10–20 người, vận hành đơn giản |
 | 2026-11-12 | Đăng nhập nội bộ + Google | Tiện cho cả tài khoản nội bộ lẫn Google |
 | 2026-11-12 | Kanban mặc định, Sprint bật tùy project | Phù hợp team nhỏ, linh hoạt, tránh nặng quy trình |
+
+## Lộ trình gợi ý
+|-------------------------------------------------------------------------------------------------------------------------------------------|
+| Giai đoạn		| Nội dung																		                    | Thời gian ước tính	|
+|---------------|---------------------------------------------------------------------------------------------------|-----------------------|
+| MVP (1)		| Auth, Team, Member/Role, Project, Task + Kanban, Comment, Thông báo trong app						| 6–8 tuần				|
+| MVP (2)		| Bug tracking + workflow, Attachment, Dashboard cá nhân, Mobile bản đầu (xem/cập nhật việc, push)	| 4–6 tuần				|
+| Giai đoạn 3	| Báo cáo định kỳ (Hangfire + email/PDF), Time log, Sprint/burndown, SLA bug						| 4 tuần				|
+| Giai đoạn 4	| Tích hợp Git/CI, test case, import Jira, tối ưu													| Tùy nhu cầu			|
+|---------------|---------------------------------------------------------------------------------------------------|-----------------------|
