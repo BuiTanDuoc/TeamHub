@@ -1,0 +1,238 @@
+# CLAUDE.md — TeamHub
+
+Hệ thống quản lý software team (10–20 người, nhiều team riêng biệt): quản lý team, dự án, giao việc/tiến độ, bug tracking, báo cáo định kỳ.
+
+> Giao tiếp, comment nghiệp vụ và tài liệu viết bằng **tiếng Việt**. Tên class, method, biến, commit message dùng **tiếng Anh**.
+
+## 1. Tech stack
+
+| Lớp | Công nghệ |
+|---|---|
+| Backend | C#, **.NET 10**, ASP.NET Core, EF Core, SQL Server |
+| Kiến trúc | Clean Architecture + CQRS (source-generated **Mediator**) |
+| Validation | FluentValidation |
+| Realtime | SignalR |
+| Background job | Hangfire (storage: SQL Server) |
+| Auth | ASP.NET Core Identity + JWT (access + refresh token) + Google login |
+| Web | React 19 + TypeScript + Vite |
+| Mobile | React Native (Expo) + TypeScript |
+| Log | Serilog |
+| Test | xUnit, FluentAssertions, Testcontainers (SQL Server), Playwright (web) |
+
+## 2. Cấu trúc solution
+
+```
+TeamHub/
+├── CLAUDE.md
+├── Directory.Build.props          # TargetFramework, Nullable, ImplicitUsings, TreatWarningsAsErrors
+├── Directory.Packages.props       # Central Package Management
+├── global.json                    # Pin .NET SDK 10
+├── docker-compose.yml
+├── src/
+│   ├── Backend/
+│   │   ├── TeamHub.Domain/
+│   │   ├── TeamHub.Application/
+│   │   ├── TeamHub.Infrastructure/
+│   │   └── TeamHub.Api/
+│   ├── Web/                       # React (Vite)
+│   ├── Mobile/                    # React Native (Expo)
+│   └── Shared/                    # TS: API client sinh từ OpenAPI, zod schemas, types
+└── tests/
+    ├── TeamHub.Domain.UnitTests/
+    ├── TeamHub.Application.UnitTests/
+    └── TeamHub.Api.IntegrationTests/
+```
+
+Quy tắc phụ thuộc (chỉ được trỏ vào trong):
+`Api → Application → Domain`, `Infrastructure → Application → Domain`.
+`Domain` không tham chiếu project nào. `Api` chỉ tham chiếu `Infrastructure` để đăng ký DI.
+
+### 2.1 Domain
+```
+TeamHub.Domain/
+├── Common/            # BaseEntity, IAuditable, ITeamScoped, DomainEvent
+├── Teams/             # Team, TeamMember, TeamRole
+├── Projects/          # Project, ProjectMember, Sprint (tùy chọn), Milestone
+├── WorkItems/         # WorkItem, WorkItemType, WorkItemStatus, TimeLog, WorkItemComment
+├── Bugs/              # Bug, BugSeverity, BugStatus, BugStatusHistory, BugWorkflow
+├── Notifications/     # Notification, NotificationPreference
+├── Reports/           # ReportSubscription, ReportSnapshot
+└── Exceptions/        # DomainException, InvalidTransitionException
+```
+
+### 2.2 Application (tổ chức theo feature)
+```
+TeamHub.Application/
+├── Common/
+│   ├── Abstractions/  # IAppDbContext, ICurrentUser, IFileStorage, IEmailSender, IClock, IPushSender
+│   ├── Behaviors/     # ValidationBehavior, AuthorizationBehavior, LoggingBehavior
+│   ├── Exceptions/    # NotFoundException, ForbiddenException, ValidationException
+│   └── Models/        # PagedResult<T>, Result<T>
+├── Teams/
+│   ├── Commands/CreateTeam/{CreateTeamCommand, CreateTeamHandler, CreateTeamValidator}.cs
+│   ├── Queries/GetMyTeams/{GetMyTeamsQuery, GetMyTeamsHandler, TeamDto}.cs
+│   └── TeamMappings.cs    # mapping thủ công (extension methods)
+├── Projects/
+├── WorkItems/
+├── Bugs/
+├── Reports/
+├── Notifications/
+└── DependencyInjection.cs
+```
+
+### 2.3 Infrastructure
+```
+TeamHub.Infrastructure/
+├── Persistence/
+│   ├── AppDbContext.cs           # global query filter theo TeamId
+│   ├── Configurations/           # IEntityTypeConfiguration<T> cho từng entity
+│   ├── Interceptors/             # AuditInterceptor, DomainEventInterceptor
+│   └── Migrations/
+├── Identity/                     # AppUser, JwtTokenService, GoogleAuthService, RefreshTokenStore
+├── Files/                        # LocalFileStorage / BlobFileStorage
+├── Email/                        # SmtpEmailSender, template
+├── Push/                         # FcmPushSender
+├── Jobs/                         # WeeklyReportJob, DueDateReminderJob, BugSlaJob
+└── DependencyInjection.cs
+```
+
+### 2.4 Api
+```
+TeamHub.Api/
+├── Endpoints/        # Minimal API, nhóm theo feature (TeamsEndpoints, BugsEndpoints, ...)
+├── Hubs/             # NotificationHub, BoardHub
+├── Middleware/       # ExceptionHandlingMiddleware (ProblemDetails)
+├── Auth/             # CurrentUser, policy, requirement handlers
+├── appsettings.json
+└── Program.cs
+```
+
+## 3. Quy ước kiến trúc (BẮT BUỘC)
+
+1. **Không dùng AutoMapper.** Mapping thủ công qua extension method hoặc projection `Select(...)` thẳng trong query.
+2. **Không dùng Repository/UnitOfWork pattern.** Handler inject `IAppDbContext` và dùng EF Core trực tiếp.
+3. **CQRS bằng Mediator (source generator)**, không dùng MediatR. Mỗi use case là 1 command/query + 1 handler + (nếu cần) 1 validator.
+4. **FluentValidation** cho mọi command. Validate chạy trong `ValidationBehavior`, handler không tự validate lại.
+5. **Giá trị cấu hình đặt trong `appsettings.json`** (bind bằng `IOptions<T>`), không hard-code hằng số nghiệp vụ: SLA theo severity, giới hạn dung lượng upload, thời gian sống token, lịch gửi báo cáo, v.v.
+6. Query chỉ đọc dùng `AsNoTracking()` + projection sang DTO. Không trả entity ra ngoài Application.
+7. Mọi danh sách phải phân trang (ưu tiên keyset pagination cho danh sách lớn).
+8. Nullable reference types bật; không `!` bừa bãi.
+9. `CancellationToken` truyền xuyên suốt đến EF Core.
+10. Ghi quyết định kiến trúc mới vào mục **Nhật ký quyết định** cuối file này.
+
+## 4. Multi-team và phân quyền
+
+- Một DB dùng chung. Mọi entity thuộc team implement `ITeamScoped` (có `TeamId`).
+- `AppDbContext` đăng ký **global query filter**: chỉ thấy dữ liệu của các team mà user hiện tại là thành viên. Chỉ dùng `IgnoreQueryFilters()` trong job nền/migration và phải có comment lý do.
+- Vai trò gắn theo **(UserId, TeamId)** trong `TeamMember`, không gắn cố định vào user: `TeamLead`, `Developer`, `Tester`, `Viewer`. `SystemAdmin` là cờ riêng ở `AppUser`.
+- Kiểm tra quyền bằng `AuthorizationBehavior` trong pipeline Mediator: command/query nào cần quyền thì khai báo qua interface `IRequireTeamRole` (khai báo `TeamId` + vai trò tối thiểu). Không check quyền rải rác trong handler.
+- **Lưu ý bảo mật:** không bao giờ tin `TeamId` từ client mà bỏ qua kiểm tra thành viên.
+
+## 5. Xác thực
+
+- Đăng nhập nội bộ (email + mật khẩu) và **Google** (OAuth 2.0/OIDC). Cả hai cùng quy về một `AppUser`; liên kết theo email đã xác minh.
+- Web/Mobile nhận JWT access token (ngắn hạn) + refresh token (xoay vòng, lưu hash trong DB, có thể thu hồi).
+- Mobile lưu token trong `expo-secure-store`; Google login dùng PKCE.
+- Chính sách mật khẩu và thời gian token cấu hình trong `appsettings.json`.
+- Tài khoản mới chỉ vào được team khi được mời (invite link/email) hoặc Admin thêm.
+
+## 6. Quy trình nghiệp vụ
+
+### 6.1 Task (WorkItem)
+Trạng thái: `Todo → InProgress → InReview → Testing → Done` (cho phép lùi lại khi bị trả).
+Mỗi lần đổi trạng thái/assignee/estimate ghi vào lịch sử. Dự án mặc định dùng **Kanban**; bật **Sprint** theo từng project bằng cờ `UseSprints` (Sprint chỉ là nhóm task theo khoảng thời gian, không thay đổi workflow).
+
+### 6.2 Bug
+State machine nằm ở `Domain/Bugs/BugWorkflow.cs`, là nơi **duy nhất** định nghĩa chuyển trạng thái hợp lệ:
+
+```
+New → Confirmed → Assigned → InProgress → Fixed → ReadyToRetest → Verified → Closed
+                                              ↑                       │
+                                              └──── Reopened ◄────────┘
+Nhánh phụ: WontFix, Duplicate, CannotReproduce (kèm lý do bắt buộc)
+```
+
+- Chuyển trạng thái sai → ném `InvalidTransitionException` (API trả 409).
+- Mỗi chuyển trạng thái ghi `BugStatusHistory` (ai, lúc nào, ghi chú).
+- Chỉ `Tester` được `Verified/Closed`; chỉ `Developer` được đặt `Fixed`. Đặt `Reopened` bắt buộc có lý do.
+- SLA theo severity đọc từ `appsettings.json` (`Bugs:Sla:Critical`, ...); `BugSlaJob` cảnh báo khi quá hạn.
+
+### 6.3 Báo cáo định kỳ
+- `ReportSnapshot` chốt số liệu theo kỳ để báo cáo cũ không bị đổi khi dữ liệu thay đổi.
+- Job Hangfire sinh báo cáo tuần/tháng theo team/dự án và gửi email (PDF/Excel). Lịch (cron) cấu hình trong `appsettings.json`.
+
+## 7. Dữ liệu (EF Core / SQL Server)
+
+- Mỗi entity có `IEntityTypeConfiguration<T>` riêng, không dùng data annotation cho cấu hình DB.
+- Khoá chính `Guid` (dùng `Guid.CreateVersion7()` để index thân thiện hơn) cho entity chính; enum lưu dạng string hoặc smallint (thống nhất toàn dự án).
+- Có `RowVersion` (`rowversion`) cho `WorkItem`, `Bug` để chống ghi đè đồng thời; xung đột → API trả 409.
+- Thời gian lưu UTC (`DateTimeOffset`); chuyển múi giờ ở client.
+- Index tối thiểu: `(TeamId, ProjectId, Status)`, `(AssigneeId, Status)`, `(DueDate)`.
+- Migration: `dotnet ef migrations add <Name> -p src/Backend/TeamHub.Infrastructure -s src/Backend/TeamHub.Api`. Không sửa migration đã áp dụng ở môi trường chung.
+- Soft delete bằng `IsDeleted` + query filter cho entity cần khôi phục (Project, WorkItem, Bug).
+
+## 8. API
+
+- Minimal API theo nhóm feature, version `/api/v1/...`.
+- Lỗi trả về `ProblemDetails` (RFC 9457); lỗi validate trả 400 kèm danh sách lỗi theo field.
+- OpenAPI sinh tự động; `src/Shared` sinh TypeScript client từ OpenAPI (`pnpm gen:api`). **Không sửa tay file generated.**
+- Realtime: SignalR group theo `team-{teamId}` và `project-{projectId}`; client chỉ join group của team mình là thành viên.
+
+## 9. Frontend (Web)
+
+- Cấu trúc theo feature: `src/features/{teams,projects,tasks,bugs,reports,notifications}` và `src/shared/{api,components,hooks,auth}`.
+- Server state: TanStack Query. UI state nhẹ: Zustand. Form: React Hook Form + Zod.
+- Không gọi `fetch`/`axios` trực tiếp trong component; dùng API client từ `Shared`.
+- Component dùng TypeScript strict, không dùng `any`.
+- Kéo thả board: `dnd-kit`. Biểu đồ: Recharts/ECharts.
+
+## 10. Mobile (React Native)
+
+- Phạm vi: xem/cập nhật việc của tôi, đổi trạng thái task/bug, comment, chụp ảnh báo bug, nhận push, dashboard rút gọn. Quản trị và báo cáo chi tiết để web đảm nhiệm.
+- Dùng chung `Shared` (API client, Zod schema) với web.
+- Push qua FCM (Expo Notifications). Cache offline bằng TanStack Query persist.
+
+## 11. Test
+
+- Domain/Application: unit test (xUnit + FluentAssertions); bắt buộc test `BugWorkflow` và các validator.
+- Integration test dùng Testcontainers (SQL Server thật), không dùng InMemory provider.
+- Đặt tên test: `Method_Scenario_ExpectedResult`.
+- Web E2E: Playwright cho luồng chính (đăng nhập, tạo task, báo bug → fix → verify).
+
+## 12. Lệnh thường dùng
+
+```bash
+# Backend
+dotnet build
+dotnet test
+dotnet run --project src/Backend/TeamHub.Api
+dotnet ef database update -p src/Backend/TeamHub.Infrastructure -s src/Backend/TeamHub.Api
+
+# Môi trường dev (SQL Server, ...)
+docker compose up -d
+
+# Web / Mobile / Shared
+pnpm install
+pnpm --filter web dev
+pnpm --filter mobile start
+pnpm gen:api
+```
+
+## 13. Quy tắc cho Claude khi làm việc trong repo này
+
+- Đọc file này trước khi sửa code; làm đúng theo mục 3 (không AutoMapper, không repository).
+- Thêm tính năng mới theo cấu trúc feature (Command/Query + Handler + Validator + mapping thủ công), không tạo "service" tùy tiện.
+- Mọi thay đổi schema phải đi kèm migration và cập nhật mục 7 nếu có quy ước mới.
+- Không hard-code giá trị nghiệp vụ; đưa vào `appsettings.json` và class Options tương ứng.
+- Không bỏ qua kiểm tra quyền theo team; mọi query/command liên quan dữ liệu team phải đi qua `AuthorizationBehavior`.
+- Comment nghiệp vụ bằng tiếng Việt, ngắn gọn, giải thích *vì sao* thay vì *cái gì*.
+- Khi chưa chắc về nghiệp vụ, hỏi lại thay vì tự suy đoán.
+
+## 14. Nhật ký quyết định
+
+| Ngày | Quyết định | Lý do |
+|---|---|---|
+| 2026-11-12 | Tự xây thay vì dùng Jira/Azure DevOps | Quy trình riêng, kiểm soát dữ liệu |
+| 2026-11-12 | Một DB dùng chung, tách theo `TeamId` + query filter | Quy mô 10–20 người, vận hành đơn giản |
+| 2026-11-12 | Đăng nhập nội bộ + Google | Tiện cho cả tài khoản nội bộ lẫn Google |
+| 2026-11-12 | Kanban mặc định, Sprint bật tùy project | Phù hợp team nhỏ, linh hoạt, tránh nặng quy trình |
