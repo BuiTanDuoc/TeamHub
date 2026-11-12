@@ -54,6 +54,9 @@ public sealed class Team : AuditableEntity
         member.Role = role;
     }
 
+    public void SetMemberCapacity(Guid userId, decimal weeklyCapacityHours) =>
+        GetMember(userId).WeeklyCapacityHours = weeklyCapacityHours;
+
     public void RemoveMember(Guid userId)
     {
         var member = GetMember(userId);

@@ -13,4 +13,6 @@ public sealed record AddTeamMemberRequest(string Email, TeamRole Role, decimal? 
 
 public sealed record ChangeTeamMemberRoleRequest(TeamRole Role);
 
+public sealed record UpdateTeamMemberCapacityRequest(decimal WeeklyCapacityHours);
+
 public sealed record IdResponse(Guid Id);

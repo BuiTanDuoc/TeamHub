@@ -4,9 +4,11 @@ using TeamHub.Application.Common;
 using TeamHub.Application.Teams.Commands.AddTeamMember;
 using TeamHub.Application.Teams.Commands.ChangeTeamMemberRole;
 using TeamHub.Application.Teams.Commands.CreateTeam;
+using TeamHub.Application.Teams.Commands.LeaveTeam;
 using TeamHub.Application.Teams.Commands.RemoveTeamMember;
 using TeamHub.Application.Teams.Commands.SetTeamActive;
 using TeamHub.Application.Teams.Commands.UpdateTeam;
+using TeamHub.Application.Teams.Commands.UpdateTeamMemberCapacity;
 using TeamHub.Application.Teams.Queries.GetMyTeams;
 using TeamHub.Application.Teams.Queries.GetTeam;
 using TeamHub.Application.Teams.Queries.GetTeamMembers;
@@ -101,6 +103,26 @@ public static class TeamsEndpoints
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound);
+
+        members.MapPut("/{userId:guid}/capacity", async (Guid teamId, Guid userId, UpdateTeamMemberCapacityRequest body, IMediator mediator, CancellationToken ct) =>
+            {
+                await mediator.Send(new UpdateTeamMemberCapacityCommand(teamId, userId, body.WeeklyCapacityHours), ct);
+                return TypedResults.NoContent();
+            })
+            .WithSummary("Đổi số giờ làm việc mỗi tuần của thành viên (TeamLead)")
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound);
+
+        // "me" không khớp ràng buộc guid của /{userId:guid} nên không xung đột route
+        members.MapDelete("/me", async (Guid teamId, IMediator mediator, CancellationToken ct) =>
+            {
+                await mediator.Send(new LeaveTeamCommand(teamId), ct);
+                return TypedResults.NoContent();
+            })
+            .WithSummary("Tự rời team; TeamLead cuối cùng không được rời")
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status403Forbidden);
 
         return app;
     }

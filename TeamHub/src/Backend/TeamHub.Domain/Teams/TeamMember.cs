@@ -25,7 +25,7 @@ public sealed class TeamMember : ITeamScoped
     public TeamRole Role { get; internal set; }
 
     /// <summary>Số giờ làm việc mỗi tuần, dùng để tính workload.</summary>
-    public decimal WeeklyCapacityHours { get; private set; }
+    public decimal WeeklyCapacityHours { get; internal set; }
 
     public DateTimeOffset JoinedAt { get; private set; }
 
