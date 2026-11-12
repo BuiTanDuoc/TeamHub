@@ -1,0 +1,9 @@
+namespace TeamHub.Domain.Common;
+
+public abstract class AuditableEntity : BaseEntity, IAuditable
+{
+    public DateTimeOffset CreatedAt { get; set; }
+    public Guid? CreatedBy { get; set; }
+    public DateTimeOffset? UpdatedAt { get; set; }
+    public Guid? UpdatedBy { get; set; }
+}
