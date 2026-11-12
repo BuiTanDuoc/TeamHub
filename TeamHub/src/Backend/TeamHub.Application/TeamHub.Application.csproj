@@ -2,5 +2,13 @@
   <ItemGroup>
     <ProjectReference Include="..\TeamHub.Domain\TeamHub.Domain.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Mediator.Abstractions" />
+    <PackageReference Include="Mediator.SourceGenerator">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Scriban" />
   </ItemGroup>
 </Project>

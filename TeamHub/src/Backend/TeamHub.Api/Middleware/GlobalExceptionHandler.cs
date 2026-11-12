@@ -14,6 +14,22 @@ public sealed class GlobalExceptionHandler(
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
+        // Lỗi validate: trả 400 kèm danh sách lỗi theo field (HttpValidationProblemDetails)
+        if (exception is RequestValidationException validation)
+        {
+            httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
+            {
+                HttpContext = httpContext,
+                Exception = exception,
+                ProblemDetails = new HttpValidationProblemDetails(validation.Errors)
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Title = "Dữ liệu không hợp lệ"
+                }
+            });
+        }
+
         if (Map(exception) is not { } mapped)
         {
             // Lỗi không lường trước: ghi log, để framework trả 500 ProblemDetails (không lộ chi tiết ở Production)

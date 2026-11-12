@@ -256,6 +256,11 @@ pnpm gen:api
 | 2026-11-12 | Fallback policy yêu cầu đăng nhập cho mọi endpoint | An toàn mặc định, quên khai báo cũng không bị lộ |
 | 2026-11-12 | Kanban mặc định, Sprint bật tùy project | Phù hợp team nhỏ, linh hoạt, tránh nặng quy trình |
 | 2026-11-12 | OpenAPI built-in (`AddOpenApi`) + Swagger UI tại `/swagger` (chỉ Development), khai báo JWT Bearer qua transformer | Thử API có token ngay trên Swagger; `Shared` sinh client từ `/openapi/v1.json` |
+| 2026-11-12 | Pipeline Mediator: `AuthorizationBehavior` → `ValidationBehavior`; handler đăng ký Scoped | Kiểm tra quyền trước khi lộ lỗi validate; handler cần `IAppDbContext` (scoped) |
+| 2026-11-12 | Chỉ SystemAdmin tạo team (kèm TeamLead đầu tiên) và ngừng/kích hoạt team; TeamLead quản lý thành viên | Khớp quy tắc "chỉ vào team khi được mời/Admin thêm"; team luôn có ít nhất một lead |
+| 2026-11-12 | Thêm thành viên theo email của user đã có tài khoản (chưa làm invite link/email) | Giữ MVP gọn; invite sẽ bổ sung cùng module Thông báo |
+| 2026-11-12 | `PagedResult<T>` + offset pagination cho danh sách nhỏ (team, thành viên); `Paging:MaxPageSize` trong appsettings | Keyset chỉ cần cho danh sách lớn (task, bug) |
+| 2026-11-12 | OpenAPI built-in (`AddOpenApi`) + Swagger UI tại `/swagger` (chỉ Development), khai báo JWT Bearer qua transformer | Thử API có token ngay trên Swagger; `Shared` sinh client từ `/openapi/v1.json` |
 
 ## 15. Lộ trình gợi ý
 |----------------+---------------------------------------------------------------------------------------------------+----------------------|

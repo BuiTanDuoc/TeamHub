@@ -4,6 +4,7 @@
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TeamHub.Application\TeamHub.Application.csproj" />
     <ProjectReference Include="..\TeamHub.Infrastructure\TeamHub.Infrastructure.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />

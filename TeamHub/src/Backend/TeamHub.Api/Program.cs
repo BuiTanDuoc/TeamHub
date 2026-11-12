@@ -8,6 +8,8 @@ using TeamHub.Api.Endpoints;
 using TeamHub.Api.Hubs;
 using TeamHub.Api.Middleware;
 using TeamHub.Api.OpenApi;
+using TeamHub.Application;
+using TeamHub.Application.Common;
 using TeamHub.Application.Common.Abstractions;
 using TeamHub.Infrastructure;
 using TeamHub.Infrastructure.Identity;
@@ -20,6 +22,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddPersistence(configuration);
 builder.Services.AddIdentityServices(configuration);
+builder.Services.AddApplication();
+builder.Services.Configure<PagingOptions>(configuration.GetSection(PagingOptions.SectionName));
 
 // ---------- Xác thực JWT + phân quyền ----------
 builder.Services.AddJwtAuthentication();
@@ -83,6 +87,7 @@ app.UseAuthorization();
 // ---------- Endpoints ----------
 app.MapGet("/health", () => TypedResults.Ok(new { status = "ok" })).AllowAnonymous();
 app.MapAuthEndpoints();
+app.MapTeamsEndpoints();
 app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapHub<BoardHub>("/hubs/board");
 
