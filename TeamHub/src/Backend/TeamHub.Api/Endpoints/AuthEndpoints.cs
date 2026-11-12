@@ -23,16 +23,28 @@ public static class AuthEndpoints
         // Các endpoint đăng nhập/làm mới cho phép ẩn danh và giới hạn tần suất theo IP
         group.MapPost("/login", async (LoginRequest request, HttpContext http, IAuthService auth, CancellationToken ct) =>
                 TypedResults.Ok(await auth.LoginAsync(request.Email, request.Password, DeviceOf(http), ct)))
+            .WithSummary("Đăng nhập bằng email và mật khẩu")
+            .WithDescription("Trả về access token (ngắn hạn) và refresh token. Giới hạn tần suất theo IP.")
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status429TooManyRequests)
             .AllowAnonymous()
             .RequireRateLimiting(RateLimitPolicies.Auth);
 
         group.MapPost("/google", async (GoogleLoginRequest request, HttpContext http, IAuthService auth, CancellationToken ct) =>
                 TypedResults.Ok(await auth.LoginWithGoogleAsync(request.IdToken, DeviceOf(http), ct)))
+            .WithSummary("Đăng nhập bằng Google ID token")
+            .WithDescription("Client lấy ID token từ Google rồi gửi lên; server xác thực chữ ký và audience.")
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status429TooManyRequests)
             .AllowAnonymous()
             .RequireRateLimiting(RateLimitPolicies.Auth);
 
         group.MapPost("/refresh", async (RefreshRequest request, HttpContext http, IAuthService auth, CancellationToken ct) =>
                 TypedResults.Ok(await auth.RefreshAsync(request.RefreshToken, DeviceOf(http), ct)))
+            .WithSummary("Đổi refresh token lấy cặp token mới")
+            .WithDescription("Refresh token xoay vòng: token cũ bị thu hồi. Dùng lại token đã thu hồi sẽ thu hồi toàn bộ phiên.")
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status429TooManyRequests)
             .AllowAnonymous()
             .RequireRateLimiting(RateLimitPolicies.Auth);
 
@@ -42,6 +54,7 @@ public static class AuthEndpoints
                 await auth.LogoutAsync(request.RefreshToken, ct);
                 return TypedResults.NoContent();
             })
+            .WithSummary("Đăng xuất (thu hồi refresh token)")
             .AllowAnonymous()
             .RequireRateLimiting(RateLimitPolicies.Auth);
 
@@ -64,7 +77,9 @@ public static class AuthEndpoints
                 .ToListAsync(ct);
 
             return TypedResults.Ok(new MeResponse(user, teams));
-        });
+        })
+        .WithSummary("Thông tin người dùng hiện tại và các team đang tham gia")
+        .ProducesProblem(StatusCodes.Status401Unauthorized);
 
         return app;
     }

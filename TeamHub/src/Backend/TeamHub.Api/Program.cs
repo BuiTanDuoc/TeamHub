@@ -7,6 +7,7 @@ using TeamHub.Api.Auth;
 using TeamHub.Api.Endpoints;
 using TeamHub.Api.Hubs;
 using TeamHub.Api.Middleware;
+using TeamHub.Api.OpenApi;
 using TeamHub.Application.Common.Abstractions;
 using TeamHub.Infrastructure;
 using TeamHub.Infrastructure.Identity;
@@ -36,7 +37,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddValidation(); // .NET 10: validate DataAnnotations cho tham số minimal API
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddOpenApi();
+builder.Services.AddTeamHubOpenApi();
 
 // ---------- CORS (SignalR JS client gửi credentials khi negotiate nên cần AllowCredentials + origin cụ thể) ----------
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy
@@ -68,7 +69,10 @@ var app = builder.Build();
 app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
-    app.MapOpenApi().AllowAnonymous();
+{
+    app.MapOpenApi().AllowAnonymous();   // /openapi/v1.json
+    app.MapSwaggerUi().AllowAnonymous(); // /swagger
+}
 
 app.UseHttpsRedirection();
 app.UseCors();

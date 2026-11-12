@@ -255,3 +255,14 @@ pnpm gen:api
 | 2026-11-12 | Google login qua ID token (client lấy token, server xác thực) | Dùng chung cho web và mobile, không cần cookie/redirect phía server |
 | 2026-11-12 | Fallback policy yêu cầu đăng nhập cho mọi endpoint | An toàn mặc định, quên khai báo cũng không bị lộ |
 | 2026-11-12 | Kanban mặc định, Sprint bật tùy project | Phù hợp team nhỏ, linh hoạt, tránh nặng quy trình |
+| 2026-11-12 | OpenAPI built-in (`AddOpenApi`) + Swagger UI tại `/swagger` (chỉ Development), khai báo JWT Bearer qua transformer | Thử API có token ngay trên Swagger; `Shared` sinh client từ `/openapi/v1.json` |
+
+## 15. Lộ trình gợi ý
+|----------------+---------------------------------------------------------------------------------------------------+----------------------|
+| Giai đoạn      | Nội dung                                                                                          | Thời gian ước tính   |
+|----------------|---------------------------------------------------------------------------------------------------|----------------------|
+| MVP (1)        | Auth, Team, Member/Role, Project, Task + Kanban, Comment, Thông báo trong app                     | 6–8 tuần             |
+| MVP (2)        | Bug tracking + workflow, Attachment, Dashboard cá nhân, Mobile bản đầu (xem/cập nhật việc, push)  | 4–6 tuần             |
+| Giai đoạn 3    | Báo cáo định kỳ (Hangfire + email/PDF), Time log, Sprint/burndown, SLA bug                        | 4 tuần               |
+| Giai đoạn 4    | Tích hợp Git/CI, test case, import Jira, tối ưu                                                   | Tùy nhu cầu          |
+|----------------+---------------------------------------------------------------------------------------------------+----------------------|
