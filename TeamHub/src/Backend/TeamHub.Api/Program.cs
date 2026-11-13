@@ -10,6 +10,7 @@ using TeamHub.Api.Middleware;
 using TeamHub.Api.OpenApi;
 using TeamHub.Application;
 using TeamHub.Application.Common;
+using TeamHub.Application.Tasks;
 using TeamHub.Application.Common.Abstractions;
 using TeamHub.Infrastructure;
 using TeamHub.Infrastructure.Identity;
@@ -24,6 +25,7 @@ builder.Services.AddPersistence(configuration);
 builder.Services.AddIdentityServices(configuration);
 builder.Services.AddApplication();
 builder.Services.Configure<PagingOptions>(configuration.GetSection(PagingOptions.SectionName));
+builder.Services.Configure<KanbanOptions>(configuration.GetSection(KanbanOptions.SectionName));
 
 // ---------- Xác thực JWT + phân quyền ----------
 builder.Services.AddJwtAuthentication();
@@ -90,6 +92,7 @@ app.MapAuthEndpoints();
 app.MapTeamsEndpoints();
 app.MapUsersEndpoints();
 app.MapProjectsEndpoints();
+app.MapTasksEndpoints();
 app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapHub<BoardHub>("/hubs/board");
 

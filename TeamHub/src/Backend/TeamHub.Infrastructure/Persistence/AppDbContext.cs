@@ -20,6 +20,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
     public DbSet<ProjectMember> ProjectMembers => Set<ProjectMember>();
     public DbSet<Sprint> Sprints => Set<Sprint>();
     public DbSet<WorkItem> WorkItems => Set<WorkItem>();
+    public DbSet<WorkItemHistory> WorkItemHistories => Set<WorkItemHistory>();
     public DbSet<Bug> Bugs => Set<Bug>();
     public DbSet<BugStatusHistory> BugStatusHistories => Set<BugStatusHistory>();
 
@@ -44,6 +45,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
         ApplyTeamScope<ProjectMember>(builder);
         ApplyTeamScope<Sprint>(builder);
         ApplyTeamScope<WorkItem>(builder);
+        ApplyTeamScope<WorkItemHistory>(builder);
         ApplyTeamScope<Bug>(builder);
         ApplyTeamScope<BugStatusHistory>(builder);
 
@@ -52,6 +54,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
         ApplySoftDelete<WorkItem>(builder);
         ApplySoftDelete<Bug>(builder);
     }
+
+    public void ClearChangeTracker() => ChangeTracker.Clear();
 
     private void ApplyTeamScope<T>(ModelBuilder builder) where T : class, ITeamScoped =>
         builder.Entity<T>().HasQueryFilter(QueryFilterNames.TeamScope,

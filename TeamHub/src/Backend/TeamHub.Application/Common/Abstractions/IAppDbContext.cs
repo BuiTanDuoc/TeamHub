@@ -16,8 +16,12 @@ public interface IAppDbContext
     DbSet<ProjectMember> ProjectMembers { get; }
     DbSet<Sprint> Sprints { get; }
     DbSet<WorkItem> WorkItems { get; }
+    DbSet<WorkItemHistory> WorkItemHistories { get; }
     DbSet<Bug> Bugs { get; }
     DbSet<BugStatusHistory> BugStatusHistories { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+
+    /// <summary>Bỏ mọi entity đang theo dõi; dùng khi thử lại sau DbUpdateConcurrencyException.</summary>
+    void ClearChangeTracker();
 }

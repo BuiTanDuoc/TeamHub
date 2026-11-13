@@ -262,6 +262,11 @@ pnpm gen:api
 | 2026-11-12 | `PagedResult<T>` + offset pagination cho danh sách nhỏ (team, thành viên); `Paging:MaxPageSize` trong appsettings | Keyset chỉ cần cho danh sách lớn (task, bug) |
 | 2026-11-12 | Route dự án lồng dưới team (`/api/v1/teams/{teamId}/projects`); TeamLead tạo/sửa/xóa mềm/đổi trạng thái, mọi thành viên team xem | `AuthorizationBehavior` kiểm tra quyền theo `TeamId` thống nhất; dự án hiển thị cho cả team |
 | 2026-11-12 | `ProjectMember` = tập người được giao task/bug của dự án, phải là thành viên team; Key dự án 2-10 ký tự, không đổi sau khi tạo | Key nằm trong mã task/bug (`TH-123`) nên đổi sẽ làm sai mã đã dùng |
+| 2026-11-12 | Task dưới `/api/v1/teams/{teamId}/projects/{projectId}/tasks`; tạo/sửa/đổi trạng thái/giao việc cho mọi vai trò từ Tester trở lên, xóa mềm chỉ TeamLead | Viewer chỉ đọc; xóa là thao tác khó hoàn tác |
+| 2026-11-12 | Cấp `Number` bằng `Project.ReserveItemNumber()` trong vòng thử lại tối đa 5 lần khi `DbUpdateConcurrencyException` (gọi `IAppDbContext.ClearChangeTracker()` trước mỗi lần) | Nhiều người tạo task cùng lúc không được trùng mã |
+| 2026-11-12 | Thêm bảng `WorkItemHistories` (Status/Assignee/Estimate, lưu giá trị hiển thị, không lưu Id) | Thực hiện mục 6.1: mỗi lần đổi trạng thái/assignee/estimate ghi lịch sử |
+| 2026-11-12 | Danh sách task dùng keyset pagination theo `Number` (cursor); người được giao phải là thành viên dự án | `Number` duy nhất trong dự án nên cursor ổn định, không trùng/sót khi có task mới |
+| 2026-11-12 | Kanban board: một cột mỗi trạng thái, tối đa `Kanban:MaxCardsPerColumn` thẻ/cột kèm `totalCount`; không hiển thị Epic; chưa có thứ tự kéo thả trong cột | Tránh trả cột Done quá dài; sắp xếp trong cột theo ưu tiên rồi số thứ tự (Done theo ngày hoàn thành) |
 | 2026-11-12 | OpenAPI built-in (`AddOpenApi`) + Swagger UI tại `/swagger` (chỉ Development), khai báo JWT Bearer qua transformer | Thử API có token ngay trên Swagger; `Shared` sinh client từ `/openapi/v1.json` |
 
 ## 15. Lộ trình gợi ý
