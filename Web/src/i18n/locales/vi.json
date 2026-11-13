@@ -1,0 +1,256 @@
+{
+  "common": {
+    "retry": "Thử lại",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "create": "Tạo",
+    "save": "Lưu",
+    "saved": "Đã lưu",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "add": "Thêm",
+    "change": "Đổi",
+    "noResults": "Không có kết quả",
+    "noDescription": "Chưa có mô tả",
+    "you": "bạn",
+    "loadMore": "Tải thêm",
+    "backToHome": "Về trang chủ"
+  },
+  "errors": {
+    "network": "Không kết nối được máy chủ. Vui lòng thử lại.",
+    "forbidden": "Bạn không có quyền thực hiện thao tác này.",
+    "conflict": "Dữ liệu đã bị người khác thay đổi. Vui lòng tải lại và thử lại.",
+    "tooManyRequests": "Thử quá nhiều lần. Vui lòng đợi một lát.",
+    "notFound": "Không tìm thấy trang."
+  },
+  "validation": {
+    "required": "Trường này là bắt buộc",
+    "tooLong": "Giá trị quá dài",
+    "email": "Email không hợp lệ",
+    "teamCode": "Chỉ gồm chữ, số, '-' và '_'",
+    "leadRequired": "Hãy chọn TeamLead đầu tiên",
+    "capacity": "Nhập số giờ từ 0 đến 168",
+    "projectKey": "2-10 ký tự chữ/số, bắt đầu bằng chữ",
+    "endBeforeStart": "Ngày kết thúc phải sau hoặc bằng ngày bắt đầu",
+    "estimate": "Nhập số giờ từ 0 đến 99999",
+    "subTaskParent": "Sub-task bắt buộc phải có task cha"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "or": "hoặc",
+    "tagline": "Quản lý team, dự án và công việc",
+    "loginHint": "Đăng nhập bằng tài khoản của bạn. Tài khoản mới do Admin hoặc TeamLead thêm vào.",
+    "invalidCredentials": "Email hoặc mật khẩu không đúng."
+  },
+  "roles": {
+    "systemAdmin": "Quản trị hệ thống"
+  },
+  "theme": {
+    "label": "Giao diện",
+    "light": "Sáng",
+    "dark": "Tối",
+    "auto": "Tự động"
+  },
+  "language": {
+    "label": "Ngôn ngữ"
+  },
+  "footer": {
+    "poweredBy": "Xây dựng với CoreUI"
+  },
+  "nav": {
+    "dashboard": "Tổng quan",
+    "teams": "Team",
+    "notifications": "Thông báo",
+    "myTeams": "Team của tôi"
+  },
+  "dashboard": {
+    "welcome": "Xin chào, {{name}}",
+    "subtitle": "Các team của bạn và cập nhật mới nhất",
+    "myTeams": "Team của tôi",
+    "noTeams": "Bạn chưa thuộc team nào",
+    "unread": "Thông báo chưa đọc ({{count}})",
+    "allCaughtUp": "Bạn đã xem hết thông báo"
+  },
+  "teams": {
+    "title": "Team",
+    "subtitle": "Các team bạn tham gia",
+    "create": "Tạo team",
+    "created": "Đã tạo team",
+    "edit": "Sửa team",
+    "name": "Tên team",
+    "code": "Mã team",
+    "codeHint": "Chỉ gồm chữ, số, '-' và '_'. Không đổi được sau khi tạo.",
+    "codeImmutable": "Mã team {{code}} không thể thay đổi.",
+    "description": "Mô tả",
+    "firstLead": "TeamLead đầu tiên",
+    "firstLeadHint": "Mỗi team luôn có ít nhất một TeamLead.",
+    "searchUserPlaceholder": "Tìm theo tên hoặc email",
+    "inactive": "Đã ngừng",
+    "memberCount_other": "{{count}} thành viên",
+    "empty": "Chưa có team nào",
+    "emptyHint": "Hãy nhờ Admin hoặc TeamLead thêm bạn vào team.",
+    "emptyAdminHint": "Tạo team đầu tiên và chỉ định TeamLead.",
+    "activate": "Kích hoạt lại",
+    "deactivate": "Ngừng hoạt động",
+    "leave": "Rời team",
+    "leaveConfirm": "Rời team \"{{name}}\"? TeamLead cuối cùng không thể rời.",
+    "left": "Bạn đã rời team",
+    "tabProjects": "Dự án",
+    "tabMembers": "Thành viên"
+  },
+  "members": {
+    "member": "Thành viên",
+    "role": "Vai trò",
+    "capacity": "Giờ/tuần",
+    "capacityHint": "Không bắt buộc, 0-168 giờ mỗi tuần.",
+    "joined": "Ngày tham gia",
+    "add": "Thêm thành viên",
+    "addHint": "Người dùng phải đã có tài khoản.",
+    "added": "Đã thêm thành viên",
+    "removed": "Đã xóa thành viên",
+    "roleChanged": "Đã đổi vai trò",
+    "remove": "Xóa",
+    "removeConfirm": "Xóa {{name}} khỏi team?",
+    "useLeave": "Dùng \"Rời team\" để tự rời",
+    "empty": "Chưa có thành viên",
+    "addToProject": "Thêm vào dự án",
+    "addedAt": "Ngày thêm",
+    "noCandidates": "Mọi thành viên team đã ở trong dự án này.",
+    "selectMember": "Chọn thành viên",
+    "removeFromProjectConfirm": "Xóa {{name}} khỏi dự án này?"
+  },
+  "projects": {
+    "name": "Tên dự án",
+    "key": "Key",
+    "keyHint": "2-10 ký tự, dùng trong mã task (vd TH-12).",
+    "keyImmutable": "Không đổi được",
+    "description": "Mô tả",
+    "startDate": "Ngày bắt đầu",
+    "endDate": "Ngày kết thúc",
+    "useSprints": "Dùng Sprint",
+    "useSprintsHint": "Sprint chỉ nhóm task theo khoảng thời gian, không đổi workflow.",
+    "create": "Tạo dự án",
+    "edit": "Sửa dự án",
+    "created": "Đã tạo dự án",
+    "deleted": "Đã xóa dự án",
+    "delete": "Xóa dự án",
+    "deleteConfirm": "Xóa dự án \"{{name}}\"?",
+    "status": "Trạng thái",
+    "allStatuses": "Mọi trạng thái",
+    "timeline": "Thời gian",
+    "members": "Thành viên",
+    "empty": "Chưa có dự án",
+    "emptyManageHint": "Tạo dự án đầu tiên cho team này.",
+    "noMembers": "Dự án chưa có thành viên",
+    "noMembersHint": "Thêm thành viên team để có thể giao task cho họ.",
+    "backToTeam": "Về team",
+    "tabBoard": "Bảng",
+    "tabList": "Danh sách",
+    "tabMembers": "Thành viên"
+  },
+  "board": {
+    "allAssignees": "Mọi người được giao",
+    "dragHint": "Kéo thẻ giữa các cột để đổi trạng thái.",
+    "emptyColumn": "Không có task",
+    "moreInList": "+{{count}} task nữa — xem ở tab Danh sách",
+    "invalidTransition": "Không thể chuyển task từ {{from}} sang {{to}}."
+  },
+  "tasks": {
+    "create": "Tạo task",
+    "created": "Đã tạo task {{code}}",
+    "deleted": "Đã xóa task",
+    "delete": "Xóa task",
+    "deleteConfirm": "Xóa task này? Khó khôi phục lại.",
+    "detail": "Task",
+    "code": "Mã",
+    "titleField": "Tiêu đề",
+    "description": "Mô tả",
+    "type": "Loại",
+    "status": "Trạng thái",
+    "priority": "Độ ưu tiên",
+    "assignee": "Người được giao",
+    "unassigned": "Chưa giao",
+    "parent": "Task cha",
+    "noParent": "Không có",
+    "estimate": "Ước lượng (giờ)",
+    "dueDate": "Hạn",
+    "reporter": "Người tạo",
+    "createdAt": "Ngày tạo",
+    "completedAt": "Hoàn thành",
+    "searchPlaceholder": "Tìm task…",
+    "allStatuses": "Mọi trạng thái",
+    "allTypes": "Mọi loại",
+    "empty": "Chưa có task",
+    "emptyFiltered": "Thử đổi bộ lọc.",
+    "noProjectMembersHint": "Dự án chưa có thành viên nên chưa thể giao task."
+  },
+  "comments": {
+    "title": "Bình luận",
+    "empty": "Chưa có bình luận",
+    "edited": "đã sửa",
+    "placeholder": "Viết bình luận…",
+    "submitHint": "Ctrl+Enter để gửi",
+    "send": "Bình luận",
+    "readOnly": "Viewer không được bình luận.",
+    "delete": "Xóa bình luận",
+    "deleteConfirm": "Xóa bình luận này?"
+  },
+  "history": {
+    "title": "Lịch sử",
+    "empty": "Chưa có thay đổi",
+    "none": "trống"
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "markAllRead": "Đánh dấu đã đọc hết",
+    "empty": "Không có thông báo",
+    "viewAll": "Xem tất cả",
+    "unreadOnly": "Chỉ chưa đọc"
+  },
+  "enums": {
+    "teamRole": {
+      "Viewer": "Người xem",
+      "Tester": "Tester",
+      "Developer": "Developer",
+      "TeamLead": "Trưởng nhóm"
+    },
+    "projectStatus": {
+      "Planning": "Lên kế hoạch",
+      "Active": "Đang chạy",
+      "OnHold": "Tạm dừng",
+      "Done": "Hoàn thành"
+    },
+    "taskStatus": {
+      "Todo": "Cần làm",
+      "InProgress": "Đang làm",
+      "InReview": "Đang review",
+      "Testing": "Đang test",
+      "Done": "Hoàn thành"
+    },
+    "taskType": {
+      "Epic": "Epic",
+      "Story": "Story",
+      "Task": "Task",
+      "SubTask": "Sub-task"
+    },
+    "priority": {
+      "Low": "Thấp",
+      "Medium": "Trung bình",
+      "High": "Cao",
+      "Urgent": "Khẩn cấp"
+    },
+    "historyField": {
+      "Status": "Trạng thái",
+      "Assignee": "Người được giao",
+      "Estimate": "Ước lượng"
+    },
+    "notificationType": {
+      "TaskAssigned": "Được giao việc",
+      "TaskCommented": "Bình luận mới",
+      "TaskStatusChanged": "Đổi trạng thái"
+    }
+  }
+}

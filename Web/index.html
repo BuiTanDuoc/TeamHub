@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>TeamHub</title>
+    <script>
+      // Áp dụng theme trước khi React render để tránh nháy sáng/tối (CoreUI đọc cùng khóa này)
+      (function () {
+        try {
+          var m = localStorage.getItem('teamhub-theme') || 'auto';
+          if (m === 'auto') m = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-coreui-theme', m);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

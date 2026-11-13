@@ -1,0 +1,257 @@
+{
+  "common": {
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "create": "Create",
+    "save": "Save",
+    "saved": "Saved",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "change": "Change",
+    "noResults": "No results",
+    "noDescription": "No description",
+    "you": "you",
+    "loadMore": "Load more",
+    "backToHome": "Back to home"
+  },
+  "errors": {
+    "network": "Could not reach the server. Please try again.",
+    "forbidden": "You do not have permission to do this.",
+    "conflict": "The data was changed by someone else. Please reload and try again.",
+    "tooManyRequests": "Too many attempts. Please wait a moment.",
+    "notFound": "Page not found."
+  },
+  "validation": {
+    "required": "This field is required",
+    "tooLong": "Value is too long",
+    "email": "Invalid email address",
+    "teamCode": "Letters, digits, '-' and '_' only",
+    "leadRequired": "Select the first team lead",
+    "capacity": "Enter hours between 0 and 168",
+    "projectKey": "2-10 letters/digits, starting with a letter",
+    "endBeforeStart": "End date must be on or after the start date",
+    "estimate": "Enter hours between 0 and 99999",
+    "subTaskParent": "A sub-task requires a parent task"
+  },
+  "auth": {
+    "login": "Sign in",
+    "logout": "Sign out",
+    "email": "Email",
+    "password": "Password",
+    "or": "or",
+    "tagline": "Team, project and task management",
+    "loginHint": "Sign in with your account. New accounts are added by an admin or team lead.",
+    "invalidCredentials": "Incorrect email or password."
+  },
+  "roles": {
+    "systemAdmin": "System admin"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "auto": "Auto"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "footer": {
+    "poweredBy": "Built with CoreUI"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "teams": "Teams",
+    "notifications": "Notifications",
+    "myTeams": "My teams"
+  },
+  "dashboard": {
+    "welcome": "Welcome, {{name}}",
+    "subtitle": "Your teams and latest updates",
+    "myTeams": "My teams",
+    "noTeams": "You are not in any team yet",
+    "unread": "Unread notifications ({{count}})",
+    "allCaughtUp": "You're all caught up"
+  },
+  "teams": {
+    "title": "Teams",
+    "subtitle": "Teams you belong to",
+    "create": "New team",
+    "created": "Team created",
+    "edit": "Edit team",
+    "name": "Team name",
+    "code": "Team code",
+    "codeHint": "Letters, digits, '-' and '_'. Cannot be changed later.",
+    "codeImmutable": "Team code {{code}} cannot be changed.",
+    "description": "Description",
+    "firstLead": "First team lead",
+    "firstLeadHint": "Every team starts with at least one lead.",
+    "searchUserPlaceholder": "Search by name or email",
+    "inactive": "Inactive",
+    "memberCount_one": "{{count}} member",
+    "memberCount_other": "{{count}} members",
+    "empty": "No teams yet",
+    "emptyHint": "Ask an admin or team lead to add you to a team.",
+    "emptyAdminHint": "Create the first team and assign a lead.",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "leave": "Leave team",
+    "leaveConfirm": "Leave team \"{{name}}\"? The last team lead cannot leave.",
+    "left": "You left the team",
+    "tabProjects": "Projects",
+    "tabMembers": "Members"
+  },
+  "members": {
+    "member": "Member",
+    "role": "Role",
+    "capacity": "Weekly hours",
+    "capacityHint": "Optional, 0-168 hours per week.",
+    "joined": "Joined",
+    "add": "Add member",
+    "addHint": "The user must already have an account.",
+    "added": "Member added",
+    "removed": "Member removed",
+    "roleChanged": "Role updated",
+    "remove": "Remove",
+    "removeConfirm": "Remove {{name}} from the team?",
+    "useLeave": "Use \"Leave team\" to remove yourself",
+    "empty": "No members",
+    "addToProject": "Add to project",
+    "addedAt": "Added",
+    "noCandidates": "All team members are already in this project.",
+    "selectMember": "Select a member",
+    "removeFromProjectConfirm": "Remove {{name}} from this project?"
+  },
+  "projects": {
+    "name": "Project name",
+    "key": "Key",
+    "keyHint": "2-10 chars, used in task codes (e.g. TH-12).",
+    "keyImmutable": "Cannot be changed",
+    "description": "Description",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "useSprints": "Use sprints",
+    "useSprintsHint": "Sprints only group tasks by time period; the workflow stays the same.",
+    "create": "New project",
+    "edit": "Edit project",
+    "created": "Project created",
+    "deleted": "Project deleted",
+    "delete": "Delete project",
+    "deleteConfirm": "Delete project \"{{name}}\"?",
+    "status": "Status",
+    "allStatuses": "All statuses",
+    "timeline": "Timeline",
+    "members": "Members",
+    "empty": "No projects",
+    "emptyManageHint": "Create the first project for this team.",
+    "noMembers": "No members in this project",
+    "noMembersHint": "Add team members so tasks can be assigned to them.",
+    "backToTeam": "Back to team",
+    "tabBoard": "Board",
+    "tabList": "List",
+    "tabMembers": "Members"
+  },
+  "board": {
+    "allAssignees": "All assignees",
+    "dragHint": "Drag cards between columns to change status.",
+    "emptyColumn": "No tasks",
+    "moreInList": "+{{count}} more — see the List tab",
+    "invalidTransition": "Cannot move a task from {{from}} to {{to}}."
+  },
+  "tasks": {
+    "create": "New task",
+    "created": "Task {{code}} created",
+    "deleted": "Task deleted",
+    "delete": "Delete task",
+    "deleteConfirm": "Delete this task? This cannot be undone easily.",
+    "detail": "Task",
+    "code": "Code",
+    "titleField": "Title",
+    "description": "Description",
+    "type": "Type",
+    "status": "Status",
+    "priority": "Priority",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned",
+    "parent": "Parent",
+    "noParent": "No parent",
+    "estimate": "Estimate (hours)",
+    "dueDate": "Due date",
+    "reporter": "Reporter",
+    "createdAt": "Created",
+    "completedAt": "Completed",
+    "searchPlaceholder": "Search tasks…",
+    "allStatuses": "All statuses",
+    "allTypes": "All types",
+    "empty": "No tasks",
+    "emptyFiltered": "Try changing the filters.",
+    "noProjectMembersHint": "This project has no members yet, so tasks cannot be assigned."
+  },
+  "comments": {
+    "title": "Comments",
+    "empty": "No comments yet",
+    "edited": "edited",
+    "placeholder": "Write a comment…",
+    "submitHint": "Ctrl+Enter to send",
+    "send": "Comment",
+    "readOnly": "Viewers cannot comment.",
+    "delete": "Delete comment",
+    "deleteConfirm": "Delete this comment?"
+  },
+  "history": {
+    "title": "History",
+    "empty": "No changes yet",
+    "none": "none"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications",
+    "viewAll": "View all",
+    "unreadOnly": "Unread only"
+  },
+  "enums": {
+    "teamRole": {
+      "Viewer": "Viewer",
+      "Tester": "Tester",
+      "Developer": "Developer",
+      "TeamLead": "Team lead"
+    },
+    "projectStatus": {
+      "Planning": "Planning",
+      "Active": "Active",
+      "OnHold": "On hold",
+      "Done": "Done"
+    },
+    "taskStatus": {
+      "Todo": "To do",
+      "InProgress": "In progress",
+      "InReview": "In review",
+      "Testing": "Testing",
+      "Done": "Done"
+    },
+    "taskType": {
+      "Epic": "Epic",
+      "Story": "Story",
+      "Task": "Task",
+      "SubTask": "Sub-task"
+    },
+    "priority": {
+      "Low": "Low",
+      "Medium": "Medium",
+      "High": "High",
+      "Urgent": "Urgent"
+    },
+    "historyField": {
+      "Status": "Status",
+      "Assignee": "Assignee",
+      "Estimate": "Estimate"
+    },
+    "notificationType": {
+      "TaskAssigned": "Task assigned",
+      "TaskCommented": "New comment",
+      "TaskStatusChanged": "Status changed"
+    }
+  }
+}
