@@ -16,11 +16,13 @@ public static class NotificationsEndpoints
             .WithTags("Notifications")
             .ProducesProblem(StatusCodes.Status401Unauthorized);
 
-        group.MapGet("/", async (bool? unreadOnly, int? page, int? pageSize,
+        group.MapGet("/", async (bool? unreadOnly, string? cursor, int? pageSize,
                     IOptions<PagingOptions> paging, IMediator mediator, CancellationToken ct) =>
                 TypedResults.Ok(await mediator.Send(new GetMyNotificationsQuery(
-                    unreadOnly ?? false, page ?? 1, pageSize ?? paging.Value.DefaultPageSize), ct)))
-            .WithSummary("Thông báo của tôi, mới nhất trước; unreadOnly=true để chỉ lấy chưa đọc")
+                    unreadOnly ?? false,
+                    string.IsNullOrEmpty(cursor) ? null : cursor,
+                    pageSize ?? paging.Value.DefaultPageSize), ct)))
+            .WithSummary("Thông báo của tôi, mới nhất trước; phân trang bằng cursor (nextCursor → ?cursor=), unreadOnly=true để chỉ lấy chưa đọc")
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
         group.MapGet("/unread-count", async (IMediator mediator, CancellationToken ct) =>

@@ -6,6 +6,7 @@ using TeamHub.Api;
 using TeamHub.Api.Auth;
 using TeamHub.Api.Endpoints;
 using TeamHub.Api.Hubs;
+using TeamHub.Api.Jobs;
 using TeamHub.Api.Middleware;
 using TeamHub.Api.OpenApi;
 using TeamHub.Application;
@@ -25,6 +26,7 @@ builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddPersistence(configuration);
 builder.Services.AddIdentityServices(configuration);
 builder.Services.AddApplication();
+builder.Services.AddTeamHubJobs(configuration);
 builder.Services.AddSingleton<INotificationPusher, SignalRNotificationPusher>();
 builder.Services.Configure<PagingOptions>(configuration.GetSection(PagingOptions.SectionName));
 builder.Services.Configure<KanbanOptions>(configuration.GetSection(KanbanOptions.SectionName));
@@ -101,6 +103,7 @@ app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapHub<BoardHub>("/hubs/board");
 
 await app.InitializeDatabaseAsync();
+app.UseTeamHubRecurringJobs();
 app.Run();
 
 // Để WebApplicationFactory<Program> dùng được trong TeamHub.Api.IntegrationTests

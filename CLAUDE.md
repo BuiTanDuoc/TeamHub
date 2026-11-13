@@ -271,6 +271,8 @@ pnpm gen:api
 | 2026-11-12 | Thông báo trong app (`Notification`) gửi theo người nhận, không áp filter team: mọi truy vấn lọc `RecipientId`; thông báo của người khác trả NotFound | Người rời team vẫn đọc được thông báo cũ; không lộ thông báo của người khác |
 | 2026-11-12 | Ba sự kiện sinh thông báo: được giao task, có bình luận mới, đổi trạng thái (gửi cho người được giao + người tạo task, bỏ qua người gây ra) | Phạm vi tối thiểu của MVP (1); thêm @mention và bug ở giai đoạn sau |
 | 2026-11-12 | `INotificationDispatcher`: Stage (cùng giao dịch) → SaveChanges → Publish; đẩy realtime qua `INotificationPusher` (SignalR, sự kiện `notification` tới group `user-{id}`), lỗi đẩy chỉ ghi log | Thông báo không bị mất khi SignalR lỗi và không đẩy tin của giao dịch đã rollback |
+| 2026-11-12 | Danh sách thông báo dùng keyset pagination với cursor mờ `(CreatedAt, Id)` mã hóa base64url (`NextCursor` → `?cursor=`); sắp CreatedAt rồi Id giảm dần | Thông báo mới đẩy realtime lên đầu không làm trang sau bị lặp/sót như offset |
+| 2026-11-12 | Job dọn thông báo (`NotificationCleanupJob`, Hangfire, cron UTC `0 20 * * *`): xóa thông báo đã đọc > 30 ngày và mọi thông báo > 180 ngày, theo lô 1000; logic ở `PurgeOldNotificationsCommand`; `Hangfire:Enabled=false` để tắt | Bảng chỉ tăng; ngưỡng đặt trong `Notifications:Cleanup`; job chỉ gọi command nên test được mà không cần Hangfire |
 | 2026-11-12 | OpenAPI built-in (`AddOpenApi`) + Swagger UI tại `/swagger` (chỉ Development), khai báo JWT Bearer qua transformer | Thử API có token ngay trên Swagger; `Shared` sinh client từ `/openapi/v1.json` |
 
 ## 15. Lộ trình gợi ý
