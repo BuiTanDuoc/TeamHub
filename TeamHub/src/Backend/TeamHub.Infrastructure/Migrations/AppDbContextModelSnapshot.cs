@@ -332,6 +332,66 @@ namespace TeamHub.Infrastructure.Migrations
                     b.ToTable("BugStatusHistories", (string)null);
                 });
 
+            modelBuilder.Entity("TeamHub.Domain.Notifications.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ActorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid?>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("ReadAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("RecipientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("WorkItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId", "IsRead", "CreatedAt");
+
+                    b.ToTable("Notifications", (string)null);
+                });
+
             modelBuilder.Entity("TeamHub.Domain.Projects.Project", b =>
                 {
                     b.Property<Guid>("Id")
@@ -789,6 +849,98 @@ namespace TeamHub.Infrastructure.Migrations
                     b.ToTable("WorkItems", (string)null);
                 });
 
+            modelBuilder.Entity("TeamHub.Domain.WorkItems.WorkItemComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("WorkItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("TeamId");
+
+                    b.HasIndex("WorkItemId", "CreatedAt");
+
+                    b.ToTable("WorkItemComments", (string)null);
+                });
+
+            modelBuilder.Entity("TeamHub.Domain.WorkItems.WorkItemHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("ChangedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("ChangedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Field")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<string>("NewValue")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("OldValue")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<Guid>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("WorkItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChangedById");
+
+                    b.HasIndex("TeamId");
+
+                    b.HasIndex("WorkItemId", "ChangedAt");
+
+                    b.ToTable("WorkItemHistories", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -907,6 +1059,15 @@ namespace TeamHub.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("ChangedBy");
+                });
+
+            modelBuilder.Entity("TeamHub.Domain.Notifications.Notification", b =>
+                {
+                    b.HasOne("TeamHub.Domain.Users.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TeamHub.Domain.Projects.Project", b =>
@@ -1041,6 +1202,52 @@ namespace TeamHub.Infrastructure.Migrations
                     b.Navigation("Reviewer");
 
                     b.Navigation("Sprint");
+                });
+
+            modelBuilder.Entity("TeamHub.Domain.WorkItems.WorkItemComment", b =>
+                {
+                    b.HasOne("TeamHub.Domain.Users.AppUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TeamHub.Domain.Teams.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TeamHub.Domain.WorkItems.WorkItem", null)
+                        .WithMany()
+                        .HasForeignKey("WorkItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("TeamHub.Domain.WorkItems.WorkItemHistory", b =>
+                {
+                    b.HasOne("TeamHub.Domain.Users.AppUser", "ChangedBy")
+                        .WithMany()
+                        .HasForeignKey("ChangedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TeamHub.Domain.Teams.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TeamHub.Domain.WorkItems.WorkItem", null)
+                        .WithMany()
+                        .HasForeignKey("WorkItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ChangedBy");
                 });
 
             modelBuilder.Entity("TeamHub.Domain.Bugs.Bug", b =>
