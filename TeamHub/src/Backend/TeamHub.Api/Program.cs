@@ -93,6 +93,7 @@ app.MapTeamsEndpoints();
 app.MapUsersEndpoints();
 app.MapProjectsEndpoints();
 app.MapTasksEndpoints();
+app.MapCommentsEndpoints();
 app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapHub<BoardHub>("/hubs/board");
 

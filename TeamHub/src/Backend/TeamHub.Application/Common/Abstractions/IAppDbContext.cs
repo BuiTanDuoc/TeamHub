@@ -17,6 +17,7 @@ public interface IAppDbContext
     DbSet<Sprint> Sprints { get; }
     DbSet<WorkItem> WorkItems { get; }
     DbSet<WorkItemHistory> WorkItemHistories { get; }
+    DbSet<WorkItemComment> WorkItemComments { get; }
     DbSet<Bug> Bugs { get; }
     DbSet<BugStatusHistory> BugStatusHistories { get; }
 

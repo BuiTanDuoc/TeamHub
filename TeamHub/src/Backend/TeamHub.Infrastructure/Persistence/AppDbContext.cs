@@ -21,6 +21,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
     public DbSet<Sprint> Sprints => Set<Sprint>();
     public DbSet<WorkItem> WorkItems => Set<WorkItem>();
     public DbSet<WorkItemHistory> WorkItemHistories => Set<WorkItemHistory>();
+    public DbSet<WorkItemComment> WorkItemComments => Set<WorkItemComment>();
     public DbSet<Bug> Bugs => Set<Bug>();
     public DbSet<BugStatusHistory> BugStatusHistories => Set<BugStatusHistory>();
 
@@ -46,12 +47,14 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
         ApplyTeamScope<Sprint>(builder);
         ApplyTeamScope<WorkItem>(builder);
         ApplyTeamScope<WorkItemHistory>(builder);
+        ApplyTeamScope<WorkItemComment>(builder);
         ApplyTeamScope<Bug>(builder);
         ApplyTeamScope<BugStatusHistory>(builder);
 
         // --- Xóa mềm
         ApplySoftDelete<Project>(builder);
         ApplySoftDelete<WorkItem>(builder);
+        ApplySoftDelete<WorkItemComment>(builder);
         ApplySoftDelete<Bug>(builder);
     }
 

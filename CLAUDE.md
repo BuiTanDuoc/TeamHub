@@ -267,6 +267,7 @@ pnpm gen:api
 | 2026-11-12 | Thêm bảng `WorkItemHistories` (Status/Assignee/Estimate, lưu giá trị hiển thị, không lưu Id) | Thực hiện mục 6.1: mỗi lần đổi trạng thái/assignee/estimate ghi lịch sử |
 | 2026-11-12 | Danh sách task dùng keyset pagination theo `Number` (cursor); người được giao phải là thành viên dự án | `Number` duy nhất trong dự án nên cursor ổn định, không trùng/sót khi có task mới |
 | 2026-11-12 | Kanban board: một cột mỗi trạng thái, tối đa `Kanban:MaxCardsPerColumn` thẻ/cột kèm `totalCount`; không hiển thị Epic; chưa có thứ tự kéo thả trong cột | Tránh trả cột Done quá dài; sắp xếp trong cột theo ưu tiên rồi số thứ tự (Done theo ngày hoàn thành) |
+| 2026-11-12 | Bình luận (`WorkItemComment`) dưới `.../tasks/{taskId}/comments`: Tester trở lên được viết; chỉ tác giả sửa; tác giả/TeamLead/SystemAdmin xóa mềm; liệt kê cũ nhất trước | Viewer chỉ đọc; chỉ người viết mới được đổi lời mình, người quản lý vẫn gỡ được nội dung không phù hợp |
 | 2026-11-12 | OpenAPI built-in (`AddOpenApi`) + Swagger UI tại `/swagger` (chỉ Development), khai báo JWT Bearer qua transformer | Thử API có token ngay trên Swagger; `Shared` sinh client từ `/openapi/v1.json` |
 
 ## 15. Lộ trình gợi ý
