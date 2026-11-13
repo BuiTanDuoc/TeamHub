@@ -1,4 +1,4 @@
-import type { TaskFilter } from './endpoints'
+import type { BugFilter, TaskFilter } from './endpoints'
 
 // Khóa query phân cấp theo team → project nên invalidate ở cấp cha sẽ làm mới toàn bộ nhánh con.
 export const qk = {
@@ -18,7 +18,15 @@ export const qk = {
     ['teams', teamId, 'projects', projectId, 'task', taskId, 'history'] as const,
   taskComments: (teamId: string, projectId: string, taskId: string) =>
     ['teams', teamId, 'projects', projectId, 'task', taskId, 'comments'] as const,
+  bugs: (teamId: string, projectId: string, filter: BugFilter) =>
+    ['teams', teamId, 'projects', projectId, 'bugs', filter] as const,
+  bug: (teamId: string, projectId: string, bugId: string) =>
+    ['teams', teamId, 'projects', projectId, 'bug', bugId] as const,
+  bugHistory: (teamId: string, projectId: string, bugId: string) =>
+    ['teams', teamId, 'projects', projectId, 'bug', bugId, 'history'] as const,
+  bugPicker: (teamId: string, projectId: string) => ['teams', teamId, 'projects', projectId, 'bug-picker'] as const,
   notifications: ['notifications'] as const,
+  notificationPrefs: ['notification-preferences'] as const,
   notificationList: (unreadOnly: boolean) => ['notifications', 'list', unreadOnly] as const,
   unreadCount: ['notifications', 'unread-count'] as const,
   users: (search: string) => ['users', search] as const,

@@ -8,7 +8,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { projectsApi } from '@/shared/api/endpoints'
 import { qk } from '@/shared/api/queryKeys'
 import { PROJECT_STATUSES, type ProjectStatus } from '@/shared/api/types'
-import { useTeamPermissions } from '@/shared/auth/permissions'
+import { roleAtLeast, useTeamPermissions } from '@/shared/auth/permissions'
 import { ProjectStatusBadge } from '@/shared/components/Badges'
 import { ConfirmModal } from '@/shared/components/ConfirmModal'
 import { PageHeader } from '@/shared/components/PageHeader'
@@ -17,6 +17,9 @@ import { TabNav } from '@/shared/components/TabNav'
 import { useApiError } from '@/shared/hooks/useApiError'
 import { toast } from '@/shared/stores/uiStore'
 import { formatDate } from '@/shared/utils/format'
+import { BugDetailModal } from '../bugs/BugDetailModal'
+import { BugFormModal } from '../bugs/BugFormModal'
+import { BugsTab } from '../bugs/BugsTab'
 import { BoardView } from '../tasks/BoardView'
 import { TaskDetailModal } from '../tasks/TaskDetailModal'
 import { TaskFormModal } from '../tasks/TaskFormModal'
@@ -24,7 +27,7 @@ import { TaskListView } from '../tasks/TaskListView'
 import { ProjectFormModal } from './ProjectFormModal'
 import { ProjectMembersTab } from './ProjectMembersTab'
 
-type Tab = 'board' | 'list' | 'members'
+type Tab = 'board' | 'list' | 'bugs' | 'members'
 
 export default function ProjectPage() {
   const { teamId = '', projectId = '' } = useParams()
@@ -36,11 +39,14 @@ export default function ProjectPage() {
   const [params, setParams] = useSearchParams()
   const [editing, setEditing] = useState(false)
   const [creatingTask, setCreatingTask] = useState(false)
+  const [creatingBug, setCreatingBug] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
   const tabParam = params.get('tab')
-  const tab: Tab = tabParam === 'list' || tabParam === 'members' ? tabParam : 'board'
+  const tab: Tab = tabParam === 'list' || tabParam === 'bugs' || tabParam === 'members' ? tabParam : 'board'
   const taskId = params.get('task')
+  const bugId = params.get('bug')
+  const canAssignBug = perms.isSystemAdmin || roleAtLeast(perms.role, 'Developer')
 
   const query = useQuery({ queryKey: qk.project(teamId, projectId), queryFn: () => projectsApi.get(teamId, projectId) })
 
@@ -131,17 +137,23 @@ export default function ProjectPage() {
             tabs={[
               { key: 'board', label: t('projects.tabBoard') },
               { key: 'list', label: t('projects.tabList') },
+              { key: 'bugs', label: t('projects.tabBugs') },
               { key: 'members', label: `${t('projects.tabMembers')} (${project.memberCount})` },
             ]}
           />
 
           {tab === 'board' && <BoardView teamId={teamId} projectId={projectId} canContribute={perms.canContribute} onOpen={openTask} />}
           {tab === 'list' && <TaskListView teamId={teamId} projectId={projectId} canContribute={perms.canContribute} onOpen={openTask} onCreate={() => setCreatingTask(true)} />}
+          {tab === 'bugs' && <BugsTab teamId={teamId} projectId={projectId} canContribute={perms.canContribute} onOpen={(id) => update({ bug: id })} onCreate={() => setCreatingBug(true)} />}
           {tab === 'members' && <ProjectMembersTab teamId={teamId} projectId={projectId} canManage={perms.canManage} />}
 
           {taskId && (
             <TaskDetailModal key={taskId} teamId={teamId} projectId={projectId} taskId={taskId} canContribute={perms.canContribute} canManage={perms.canManage} onClose={() => update({ task: null })} />
           )}
+          {bugId && (
+            <BugDetailModal key={bugId} teamId={teamId} projectId={projectId} bugId={bugId} canContribute={perms.canContribute} canAssign={canAssignBug} canManage={perms.canManage} onClose={() => update({ bug: null })} />
+          )}
+          <BugFormModal teamId={teamId} projectId={projectId} visible={creatingBug} onClose={() => setCreatingBug(false)} onCreated={(id) => update({ tab: 'bugs', bug: id })} />
           <TaskFormModal teamId={teamId} projectId={projectId} visible={creatingTask} onClose={() => setCreatingTask(false)} onCreated={openTask} />
           <ProjectFormModal teamId={teamId} project={project} visible={editing} onClose={() => setEditing(false)} />
           <ConfirmModal visible={deleting} title={t('projects.delete')} message={t('projects.deleteConfirm', { name: project.name })} confirmLabel={t('common.delete')} busy={remove.isPending} onClose={() => setDeleting(false)} onConfirm={() => remove.mutate()} />

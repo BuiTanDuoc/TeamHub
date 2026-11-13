@@ -1,6 +1,6 @@
 import { CBadge } from '@coreui/react'
 import { useTranslation } from 'react-i18next'
-import type { NotificationType, Priority, ProjectStatus, TeamRole, WorkItemStatus, WorkItemType } from '../api/types'
+import type { BugSeverity, BugStatus, NotificationType, Priority, ProjectStatus, TeamRole, WorkItemStatus, WorkItemType } from '../api/types'
 
 type Color = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'dark' | 'light'
 
@@ -43,4 +43,21 @@ export const TypeBadge = ({ type }: { type: WorkItemType }) => {
 
 export const NOTIFICATION_ICON_COLOR: Record<NotificationType, Color> = {
   TaskAssigned: 'primary', TaskCommented: 'info', TaskStatusChanged: 'warning',
+  BugAssigned: 'danger', BugStatusChanged: 'danger', Mentioned: 'success',
+}
+
+export const BUG_STATUS_COLOR: Record<BugStatus, Color> = {
+  New: 'secondary', Confirmed: 'info', Assigned: 'primary', InProgress: 'primary', Fixed: 'success', ReadyToRetest: 'warning',
+  Verified: 'success', Closed: 'dark', Reopened: 'danger', WontFix: 'secondary', Duplicate: 'secondary', CannotReproduce: 'secondary',
+}
+export const BUG_SEVERITY_COLOR: Record<BugSeverity, Color> = { Trivial: 'secondary', Minor: 'info', Major: 'warning', Critical: 'danger' }
+
+export const BugStatusBadge = ({ status }: { status: BugStatus }) => {
+  const { t } = useTranslation()
+  return <CBadge color={BUG_STATUS_COLOR[status]}>{t(`enums.bugStatus.${status}`)}</CBadge>
+}
+
+export const BugSeverityBadge = ({ severity }: { severity: BugSeverity }) => {
+  const { t } = useTranslation()
+  return <CBadge color={BUG_SEVERITY_COLOR[severity]}>{t(`enums.bugSeverity.${severity}`)}</CBadge>
 }

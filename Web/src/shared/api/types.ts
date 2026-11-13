@@ -7,12 +7,26 @@ export type WorkItemStatus = 'Todo' | 'InProgress' | 'InReview' | 'Testing' | 'D
 export type WorkItemType = 'Epic' | 'Story' | 'Task' | 'SubTask'
 export type Priority = 'Low' | 'Medium' | 'High' | 'Urgent'
 export type WorkItemField = 'Status' | 'Assignee' | 'Estimate'
-export type NotificationType = 'TaskAssigned' | 'TaskCommented' | 'TaskStatusChanged'
+export type NotificationType = 'TaskAssigned' | 'TaskCommented' | 'TaskStatusChanged' | 'BugAssigned' | 'BugStatusChanged' | 'Mentioned'
+export type BugStatus =
+  | 'New' | 'Confirmed' | 'Assigned' | 'InProgress' | 'Fixed' | 'ReadyToRetest' | 'Verified' | 'Closed' | 'Reopened'
+  | 'WontFix' | 'Duplicate' | 'CannotReproduce'
+export type BugSeverity = 'Trivial' | 'Minor' | 'Major' | 'Critical'
+export type BugEnvironment = 'Dev' | 'Staging' | 'Production'
 
 export const TEAM_ROLES: readonly TeamRole[] = ['Viewer', 'Tester', 'Developer', 'TeamLead']
 export const PROJECT_STATUSES: readonly ProjectStatus[] = ['Planning', 'Active', 'OnHold', 'Done']
 export const WORK_ITEM_STATUSES: readonly WorkItemStatus[] = ['Todo', 'InProgress', 'InReview', 'Testing', 'Done']
 export const WORK_ITEM_TYPES: readonly WorkItemType[] = ['Epic', 'Story', 'Task', 'SubTask']
+export const NOTIFICATION_TYPES: readonly NotificationType[] = [
+  'TaskAssigned', 'TaskCommented', 'TaskStatusChanged', 'BugAssigned', 'BugStatusChanged', 'Mentioned',
+]
+export const BUG_STATUSES: readonly BugStatus[] = [
+  'New', 'Confirmed', 'Assigned', 'InProgress', 'Fixed', 'ReadyToRetest', 'Verified', 'Closed', 'Reopened',
+  'WontFix', 'Duplicate', 'CannotReproduce',
+]
+export const BUG_SEVERITIES: readonly BugSeverity[] = ['Trivial', 'Minor', 'Major', 'Critical']
+export const BUG_ENVIRONMENTS: readonly BugEnvironment[] = ['Dev', 'Staging', 'Production']
 export const PRIORITIES: readonly Priority[] = ['Low', 'Medium', 'High', 'Urgent']
 
 /** DateOnly của .NET → 'yyyy-MM-dd'. DateTimeOffset → chuỗi ISO 8601. */
@@ -29,6 +43,12 @@ export interface PagedResult<T> {
 export interface CursorPagedResult<T> {
   items: T[]
   nextCursor: number | null
+}
+
+/** Keyset pagination với cursor mờ (chuỗi base64url) — dùng cho thông báo. */
+export interface KeysetPagedResult<T> {
+  items: T[]
+  nextCursor: string | null
 }
 
 export interface IdResponse {
@@ -201,6 +221,7 @@ export interface AppNotification {
   teamId: string | null
   projectId: string | null
   workItemId: string | null
+  bugId: string | null
   isRead: boolean
   createdAt: IsoDateTime
 }
@@ -252,4 +273,86 @@ export interface UpdateTaskRequest {
   priority: Priority
   estimateHours: number | null
   dueDate: DateOnly | null
+}
+
+// ---------- Bugs ----------
+export interface Bug {
+  id: string
+  projectId: string
+  number: number
+  code: string
+  title: string
+  severity: BugSeverity
+  priority: Priority
+  status: BugStatus
+  environment: BugEnvironment
+  assigneeId: string | null
+  assigneeName: string | null
+  slaDueAt: IsoDateTime | null
+  createdAt: IsoDateTime
+}
+
+export interface BugDetail {
+  id: string
+  projectId: string
+  number: number
+  code: string
+  title: string
+  severity: BugSeverity
+  priority: Priority
+  status: BugStatus
+  environment: BugEnvironment
+  affectedVersion: string | null
+  fixedInVersion: string | null
+  stepsToReproduce: string
+  expectedResult: string
+  actualResult: string
+  deviceInfo: string | null
+  reporterId: string
+  reporterName: string
+  assigneeId: string | null
+  assigneeName: string | null
+  linkedWorkItemId: string | null
+  duplicateOfBugId: string | null
+  slaDueAt: IsoDateTime | null
+  resolvedAt: IsoDateTime | null
+  closedAt: IsoDateTime | null
+  reopenCount: number
+  createdAt: IsoDateTime
+  /** Các trạng thái người xem được phép chuyển sang (đã tính theo workflow và vai trò của họ). */
+  allowedTransitions: BugStatus[]
+}
+
+export interface CreatedBug {
+  id: string
+  number: number
+  code: string
+}
+
+export interface BugStatusHistoryEntry {
+  fromStatus: BugStatus | null
+  toStatus: BugStatus
+  changedById: string
+  changedByName: string
+  changedAt: IsoDateTime
+  note: string | null
+}
+
+/** Body dùng chung cho tạo và sửa bug. */
+export interface BugRequest {
+  title: string
+  severity: BugSeverity
+  priority: Priority
+  environment: BugEnvironment
+  affectedVersion: string | null
+  stepsToReproduce: string
+  expectedResult: string
+  actualResult: string
+  deviceInfo: string | null
+}
+
+export interface NotificationPreference {
+  type: NotificationType
+  inAppEnabled: boolean
+  pushEnabled: boolean
 }

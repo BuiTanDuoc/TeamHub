@@ -149,7 +149,8 @@
     "backToTeam": "Về team",
     "tabBoard": "Bảng",
     "tabList": "Danh sách",
-    "tabMembers": "Thành viên"
+    "tabMembers": "Thành viên",
+    "tabBugs": "Bug"
   },
   "board": {
     "allAssignees": "Mọi người được giao",
@@ -196,7 +197,8 @@
     "send": "Bình luận",
     "readOnly": "Viewer không được bình luận.",
     "delete": "Xóa bình luận",
-    "deleteConfirm": "Xóa bình luận này?"
+    "deleteConfirm": "Xóa bình luận này?",
+    "mention": "Nhắc tên"
   },
   "history": {
     "title": "Lịch sử",
@@ -208,7 +210,13 @@
     "markAllRead": "Đánh dấu đã đọc hết",
     "empty": "Không có thông báo",
     "viewAll": "Xem tất cả",
-    "unreadOnly": "Chỉ chưa đọc"
+    "unreadOnly": "Chỉ chưa đọc",
+    "settings": "Cài đặt thông báo",
+    "settingsHint": "Chọn sự kiện nào sẽ báo cho bạn trong ứng dụng và trên push điện thoại.",
+    "eventType": "Sự kiện",
+    "inApp": "Trong app",
+    "push": "Push điện thoại",
+    "bothOffHint": "Tắt cả hai cho một sự kiện nghĩa là sẽ không tạo thông báo."
   },
   "enums": {
     "teamRole": {
@@ -250,7 +258,68 @@
     "notificationType": {
       "TaskAssigned": "Được giao việc",
       "TaskCommented": "Bình luận mới",
-      "TaskStatusChanged": "Đổi trạng thái"
+      "TaskStatusChanged": "Đổi trạng thái",
+      "BugAssigned": "Được giao bug",
+      "BugStatusChanged": "Bug đổi trạng thái",
+      "Mentioned": "Được nhắc đến"
+    },
+    "bugStatus": {
+      "New": "Mới",
+      "Confirmed": "Đã xác nhận",
+      "Assigned": "Đã giao",
+      "InProgress": "Đang sửa",
+      "Fixed": "Đã sửa",
+      "ReadyToRetest": "Chờ test lại",
+      "Verified": "Đã xác minh",
+      "Closed": "Đã đóng",
+      "Reopened": "Mở lại",
+      "WontFix": "Không sửa",
+      "Duplicate": "Trùng lặp",
+      "CannotReproduce": "Không tái hiện được"
+    },
+    "bugSeverity": {
+      "Trivial": "Rất nhẹ",
+      "Minor": "Nhẹ",
+      "Major": "Nghiêm trọng",
+      "Critical": "Chí mạng"
+    },
+    "bugEnvironment": {
+      "Dev": "Dev",
+      "Staging": "Staging",
+      "Production": "Production"
     }
+  },
+  "bugs": {
+    "create": "Báo bug",
+    "edit": "Sửa bug",
+    "created": "Đã báo bug",
+    "deleted": "Đã xóa bug",
+    "delete": "Xóa bug",
+    "deleteConfirm": "Xóa bug này?",
+    "detail": "Bug",
+    "severity": "Mức độ",
+    "allSeverities": "Mọi mức độ",
+    "environment": "Môi trường",
+    "affectedVersion": "Phiên bản bị lỗi",
+    "fixedInVersion": "Đã sửa ở phiên bản",
+    "deviceInfo": "Thiết bị / trình duyệt",
+    "steps": "Các bước tái hiện",
+    "expected": "Kết quả mong đợi",
+    "actual": "Kết quả thực tế",
+    "searchPlaceholder": "Tìm bug…",
+    "empty": "Chưa có bug",
+    "slaDue": "Hạn SLA",
+    "overdue": "quá hạn",
+    "reopenCount": "Số lần mở lại",
+    "resolvedAt": "Đã xử lý",
+    "closedAt": "Đã đóng",
+    "actions": "Thao tác",
+    "noActions": "Không có bước chuyển nào cho vai trò của bạn.",
+    "statusChanged": "Đã đổi trạng thái bug",
+    "moveTo": "Chuyển sang: {{status}}",
+    "note": "Ghi chú",
+    "noteRequiredHint": "Trạng thái này bắt buộc nhập lý do.",
+    "originalBug": "Bug gốc",
+    "selectOriginal": "Chọn bug gốc"
   }
 }

@@ -1,4 +1,4 @@
-import { cilAccountLogout, cilContrast, cilLanguage, cilMenu, cilMoon, cilSun } from '@coreui/icons'
+import { cilAccountLogout, cilBell, cilContrast, cilLanguage, cilMenu, cilMoon, cilSun } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import {
   CBadge, CContainer, CDropdown, CDropdownDivider, CDropdownHeader, CDropdownItem, CDropdownMenu, CDropdownToggle, CHeader,
@@ -109,6 +109,10 @@ export function AppHeader() {
                 )}
               </CDropdownHeader>
               <CDropdownDivider />
+              <CDropdownItem as="button" type="button" onClick={() => navigate('/settings/notifications')}>
+                <CIcon icon={cilBell} className="me-2" />
+                {t('notifications.settings')}
+              </CDropdownItem>
               <CDropdownItem
                 as="button"
                 type="button"

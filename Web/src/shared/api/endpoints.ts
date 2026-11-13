@@ -1,5 +1,6 @@
 import { api } from './client'
 import type {
+  Bug, BugDetail, BugRequest, BugSeverity, BugStatus, BugStatusHistoryEntry, CreatedBug, KeysetPagedResult, NotificationPreference,
   AddTeamMemberRequest, AppNotification, AuthResult, CreatedTask, CreateProjectRequest, CreateTaskRequest,
   CreateTeamRequest, CursorPagedResult, IdResponse, KanbanBoard, MeResponse, PagedResult, Project, ProjectMember,
   ProjectStatus, Task, TaskComment, TaskDetail, TaskHistoryEntry, Team, TeamMember, TeamRole, UpdateProjectRequest,
@@ -13,6 +14,15 @@ const taskPath = (teamId: string, projectId: string, taskId: string) => `${proje
 export interface TaskFilter {
   status?: WorkItemStatus
   type?: WorkItemType
+  assigneeId?: string
+  search?: string
+  cursor?: number
+  pageSize?: number
+}
+
+export interface BugFilter {
+  status?: BugStatus
+  severity?: BugSeverity
   assigneeId?: string
   search?: string
   cursor?: number
@@ -86,18 +96,43 @@ export const tasksApi = {
 export const commentsApi = {
   list: (teamId: string, projectId: string, taskId: string, page = 1, pageSize = 100) =>
     api.get<PagedResult<TaskComment>>(`${taskPath(teamId, projectId, taskId)}/comments`, { page, pageSize }),
-  add: (teamId: string, projectId: string, taskId: string, body: string) =>
-    api.post<IdResponse>(`${taskPath(teamId, projectId, taskId)}/comments`, { body }),
+  /** mentionedUserIds: người được @nhắc (phải là thành viên team, tối đa 20); chỉ hỗ trợ khi thêm mới. */
+  add: (teamId: string, projectId: string, taskId: string, body: string, mentionedUserIds: string[] = []) =>
+    api.post<IdResponse>(`${taskPath(teamId, projectId, taskId)}/comments`, { body, mentionedUserIds }),
   edit: (teamId: string, projectId: string, taskId: string, commentId: string, body: string) =>
     api.put(`${taskPath(teamId, projectId, taskId)}/comments/${commentId}`, { body }),
   remove: (teamId: string, projectId: string, taskId: string, commentId: string) =>
     api.delete(`${taskPath(teamId, projectId, taskId)}/comments/${commentId}`),
 }
 
+const bugPath = (teamId: string, projectId: string, bugId: string) => `${projectPath(teamId, projectId)}/bugs/${bugId}`
+
+export const bugsApi = {
+  list: (teamId: string, projectId: string, filter: BugFilter = {}) =>
+    api.get<CursorPagedResult<Bug>>(`${projectPath(teamId, projectId)}/bugs`, { ...filter }),
+  get: (teamId: string, projectId: string, bugId: string) => api.get<BugDetail>(bugPath(teamId, projectId, bugId)),
+  create: (teamId: string, projectId: string, body: BugRequest) =>
+    api.post<CreatedBug>(`${projectPath(teamId, projectId)}/bugs`, body),
+  update: (teamId: string, projectId: string, bugId: string, body: BugRequest) =>
+    api.put(bugPath(teamId, projectId, bugId), body),
+  changeStatus: (teamId: string, projectId: string, bugId: string, status: BugStatus, note: string | null, fixedInVersion: string | null) =>
+    api.put(`${bugPath(teamId, projectId, bugId)}/status`, { status, note, fixedInVersion }),
+  assign: (teamId: string, projectId: string, bugId: string, assigneeId: string) =>
+    api.put(`${bugPath(teamId, projectId, bugId)}/assignee`, { assigneeId }),
+  markDuplicate: (teamId: string, projectId: string, bugId: string, originalBugId: string, note: string) =>
+    api.put(`${bugPath(teamId, projectId, bugId)}/duplicate`, { originalBugId, note }),
+  remove: (teamId: string, projectId: string, bugId: string) => api.delete(bugPath(teamId, projectId, bugId)),
+  history: (teamId: string, projectId: string, bugId: string, page = 1, pageSize = 50) =>
+    api.get<PagedResult<BugStatusHistoryEntry>>(`${bugPath(teamId, projectId, bugId)}/history`, { page, pageSize }),
+}
+
 export const notificationsApi = {
-  list: (unreadOnly = false, page = 1, pageSize = 20) =>
-    api.get<PagedResult<AppNotification>>('/api/v1/notifications', { unreadOnly, page, pageSize }),
+  /** Keyset pagination: truyền nextCursor của trang trước vào cursor. */
+  list: (unreadOnly = false, cursor?: string, pageSize = 20) =>
+    api.get<KeysetPagedResult<AppNotification>>('/api/v1/notifications', { unreadOnly, cursor, pageSize }),
   unreadCount: () => api.get<{ count: number }>('/api/v1/notifications/unread-count'),
   markRead: (id: string) => api.put(`/api/v1/notifications/${id}/read`),
   markAllRead: () => api.put<{ updated: number }>('/api/v1/notifications/read-all'),
+  preferences: () => api.get<NotificationPreference[]>('/api/v1/notifications/preferences'),
+  savePreferences: (items: NotificationPreference[]) => api.put('/api/v1/notifications/preferences', { items }),
 }

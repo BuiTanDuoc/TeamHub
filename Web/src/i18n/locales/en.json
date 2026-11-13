@@ -150,7 +150,8 @@
     "backToTeam": "Back to team",
     "tabBoard": "Board",
     "tabList": "List",
-    "tabMembers": "Members"
+    "tabMembers": "Members",
+    "tabBugs": "Bugs"
   },
   "board": {
     "allAssignees": "All assignees",
@@ -197,7 +198,8 @@
     "send": "Comment",
     "readOnly": "Viewers cannot comment.",
     "delete": "Delete comment",
-    "deleteConfirm": "Delete this comment?"
+    "deleteConfirm": "Delete this comment?",
+    "mention": "Mention"
   },
   "history": {
     "title": "History",
@@ -209,7 +211,13 @@
     "markAllRead": "Mark all as read",
     "empty": "No notifications",
     "viewAll": "View all",
-    "unreadOnly": "Unread only"
+    "unreadOnly": "Unread only",
+    "settings": "Notification settings",
+    "settingsHint": "Choose which events notify you in the app and on mobile push.",
+    "eventType": "Event",
+    "inApp": "In app",
+    "push": "Mobile push",
+    "bothOffHint": "Turning both off for an event means no notification is created."
   },
   "enums": {
     "teamRole": {
@@ -251,7 +259,68 @@
     "notificationType": {
       "TaskAssigned": "Task assigned",
       "TaskCommented": "New comment",
-      "TaskStatusChanged": "Status changed"
+      "TaskStatusChanged": "Status changed",
+      "BugAssigned": "Bug assigned",
+      "BugStatusChanged": "Bug status changed",
+      "Mentioned": "Mentioned"
+    },
+    "bugStatus": {
+      "New": "New",
+      "Confirmed": "Confirmed",
+      "Assigned": "Assigned",
+      "InProgress": "In progress",
+      "Fixed": "Fixed",
+      "ReadyToRetest": "Ready to retest",
+      "Verified": "Verified",
+      "Closed": "Closed",
+      "Reopened": "Reopened",
+      "WontFix": "Won't fix",
+      "Duplicate": "Duplicate",
+      "CannotReproduce": "Cannot reproduce"
+    },
+    "bugSeverity": {
+      "Trivial": "Trivial",
+      "Minor": "Minor",
+      "Major": "Major",
+      "Critical": "Critical"
+    },
+    "bugEnvironment": {
+      "Dev": "Dev",
+      "Staging": "Staging",
+      "Production": "Production"
     }
+  },
+  "bugs": {
+    "create": "Report bug",
+    "edit": "Edit bug",
+    "created": "Bug reported",
+    "deleted": "Bug deleted",
+    "delete": "Delete bug",
+    "deleteConfirm": "Delete this bug?",
+    "detail": "Bug",
+    "severity": "Severity",
+    "allSeverities": "All severities",
+    "environment": "Environment",
+    "affectedVersion": "Affected version",
+    "fixedInVersion": "Fixed in version",
+    "deviceInfo": "Device / browser info",
+    "steps": "Steps to reproduce",
+    "expected": "Expected result",
+    "actual": "Actual result",
+    "searchPlaceholder": "Search bugs…",
+    "empty": "No bugs",
+    "slaDue": "SLA due",
+    "overdue": "overdue",
+    "reopenCount": "Times reopened",
+    "resolvedAt": "Resolved",
+    "closedAt": "Closed",
+    "actions": "Actions",
+    "noActions": "No transitions available for your role.",
+    "statusChanged": "Bug status updated",
+    "moveTo": "Move to: {{status}}",
+    "note": "Note",
+    "noteRequiredHint": "A reason is required for this status.",
+    "originalBug": "Original bug",
+    "selectOriginal": "Select the original bug"
   }
 }

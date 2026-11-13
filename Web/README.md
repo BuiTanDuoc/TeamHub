@@ -12,4 +12,4 @@ Dev dùng proxy Vite: `/api` và `/hubs` → `DEV_API_TARGET` (mặc định `ht
 Chạy backend trước: `dotnet run --project src/Backend/TeamHub.Api`, và seed Admin qua user-secrets (CLAUDE.md §12).
 
 ## Cấu trúc
-`src/features/{auth,dashboard,teams,projects,tasks,notifications}`, `src/shared/{api,auth,components,hooks,realtime,stores,utils}`, `src/layout`, `src/i18n/locales/{vi,en}.json`.
+`src/features/{auth,dashboard,teams,projects,tasks,bugs,notifications}`, `src/shared/{api,auth,components,hooks,realtime,stores,utils}`, `src/layout`, `src/i18n/locales/{vi,en}.json`.

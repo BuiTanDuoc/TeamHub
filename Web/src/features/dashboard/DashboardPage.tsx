@@ -17,7 +17,7 @@ export default function DashboardPage() {
   const user = useAuthStore((s) => s.user)
   const teams = useAuthStore((s) => s.teams)
   const unread = useQuery({ queryKey: qk.unreadCount, queryFn: notificationsApi.unreadCount })
-  const latest = useQuery({ queryKey: qk.notificationList(true), queryFn: () => notificationsApi.list(true, 1, 8) })
+  const latest = useQuery({ queryKey: qk.notificationList(true), queryFn: () => notificationsApi.list(true, undefined, 8) })
 
   return (
     <>

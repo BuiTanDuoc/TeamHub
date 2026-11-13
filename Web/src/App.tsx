@@ -13,6 +13,7 @@ const TeamsPage = lazy(() => import('./features/teams/TeamsPage'))
 const TeamDetailPage = lazy(() => import('./features/teams/TeamDetailPage'))
 const ProjectPage = lazy(() => import('./features/projects/ProjectPage'))
 const NotificationsPage = lazy(() => import('./features/notifications/NotificationsPage'))
+const NotificationPreferencesPage = lazy(() => import('./features/notifications/NotificationPreferencesPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
 export default function App() {
@@ -40,6 +41,7 @@ export default function App() {
               <Route path="teams/:teamId" element={<TeamDetailPage />} />
               <Route path="teams/:teamId/projects/:projectId" element={<ProjectPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
+              <Route path="settings/notifications" element={<NotificationPreferencesPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Route>

@@ -12,7 +12,9 @@ import { formatRelative } from '@/shared/utils/format'
 
 export const notificationTarget = (n: AppNotification): string =>
   n.teamId && n.projectId
-    ? `/teams/${n.teamId}/projects/${n.projectId}${n.workItemId ? `?task=${n.workItemId}` : ''}`
+    ? `/teams/${n.teamId}/projects/${n.projectId}${
+        n.bugId ? `?tab=bugs&bug=${n.bugId}` : n.workItemId ? `?task=${n.workItemId}` : ''
+      }`
     : '/notifications'
 
 export function NotificationBell() {
@@ -22,7 +24,7 @@ export function NotificationBell() {
   const { showError } = useApiError()
 
   const unread = useQuery({ queryKey: qk.unreadCount, queryFn: notificationsApi.unreadCount, refetchInterval: 60_000 })
-  const latest = useQuery({ queryKey: qk.notificationList(false), queryFn: () => notificationsApi.list(false, 1, 6) })
+  const latest = useQuery({ queryKey: qk.notificationList(false), queryFn: () => notificationsApi.list(false, undefined, 6) })
 
   const refresh = () => queryClient.invalidateQueries({ queryKey: qk.notifications })
   const markRead = useMutation({ mutationFn: notificationsApi.markRead, onSuccess: refresh, onError: showError })

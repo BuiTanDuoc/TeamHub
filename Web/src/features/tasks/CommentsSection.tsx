@@ -1,10 +1,10 @@
 import { cilPencil, cilTrash } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { CButton, CFormTextarea, CSpinner } from '@coreui/react'
+import { CButton, CDropdown, CDropdownItem, CDropdownMenu, CDropdownToggle, CFormTextarea, CSpinner } from '@coreui/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { commentsApi } from '@/shared/api/endpoints'
+import { commentsApi, teamsApi } from '@/shared/api/endpoints'
 import { qk } from '@/shared/api/queryKeys'
 import type { TaskComment } from '@/shared/api/types'
 import { ConfirmModal } from '@/shared/components/ConfirmModal'
@@ -14,6 +14,7 @@ import { useApiError } from '@/shared/hooks/useApiError'
 import { formatDateTime } from '@/shared/utils/format'
 
 const MAX_LENGTH = 5000 // khớp độ dài cột Body (AddCommentValidator)
+const MAX_MENTIONS = 20 // khớp AddCommentValidator.MaxMentions
 
 interface Props {
   teamId: string
@@ -33,17 +34,22 @@ export function CommentsSection({ teamId, projectId, taskId, meId, canContribute
   const key = qk.taskComments(teamId, projectId, taskId)
 
   const [draft, setDraft] = useState('')
+  // @mention: Id → tên đã chọn; chỉ gửi những người mà "@Tên" còn nằm trong nội dung khi bấm gửi
+  const [mentions, setMentions] = useState<Record<string, string>>({})
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editText, setEditText] = useState('')
   const [deleting, setDeleting] = useState<TaskComment | null>(null)
 
+  const teamMembers = useQuery({ queryKey: qk.teamMembers(teamId), queryFn: () => teamsApi.members(teamId), enabled: canContribute })
   const query = useQuery({ queryKey: key, queryFn: () => commentsApi.list(teamId, projectId, taskId) })
   const refresh = () => queryClient.invalidateQueries({ queryKey: key })
 
   const add = useMutation({
-    mutationFn: (body: string) => commentsApi.add(teamId, projectId, taskId, body),
+    mutationFn: ({ body, mentionedUserIds }: { body: string; mentionedUserIds: string[] }) =>
+      commentsApi.add(teamId, projectId, taskId, body, mentionedUserIds),
     onSuccess: async () => {
       setDraft('')
+      setMentions({})
       await refresh()
     },
     onError: showError,
@@ -72,7 +78,17 @@ export function CommentsSection({ teamId, projectId, taskId, meId, canContribute
 
   const submit = () => {
     const body = draft.trim()
-    if (body) add.mutate(body)
+    if (!body) return
+    const mentionedUserIds = Object.entries(mentions)
+      .filter(([, name]) => body.includes(`@${name}`))
+      .map(([id]) => id)
+      .slice(0, MAX_MENTIONS)
+    add.mutate({ body, mentionedUserIds })
+  }
+
+  const mention = (id: string, name: string) => {
+    setMentions((m) => ({ ...m, [id]: name }))
+    setDraft((d) => `${d}${d && !d.endsWith(' ') ? ' ' : ''}@${name} `)
   }
 
   return (
@@ -141,7 +157,21 @@ export function CommentsSection({ teamId, projectId, taskId, meId, canContribute
             onKeyDown={(e) => (e.ctrlKey || e.metaKey) && e.key === 'Enter' && submit()}
           />
           <div className="d-flex justify-content-between align-items-center mt-2">
-            <span className="small text-body-secondary">{t('comments.submitHint')}</span>
+            <span className="d-flex align-items-center gap-2">
+              <CDropdown>
+                <CDropdownToggle color="secondary" variant="outline" size="sm" caret={false} disabled={!teamMembers.data?.items.length}>
+                  @ {t('comments.mention')}
+                </CDropdownToggle>
+                <CDropdownMenu style={{ maxHeight: 240, overflowY: 'auto' }}>
+                  {teamMembers.data?.items.filter((m) => m.userId !== meId).map((m) => (
+                    <CDropdownItem key={m.userId} as="button" type="button" onClick={() => mention(m.userId, m.fullName)}>
+                      {m.fullName}
+                    </CDropdownItem>
+                  ))}
+                </CDropdownMenu>
+              </CDropdown>
+              <span className="small text-body-secondary d-none d-md-inline">{t('comments.submitHint')}</span>
+            </span>
             <CButton color="primary" size="sm" disabled={!draft.trim() || add.isPending} onClick={submit}>
               {add.isPending && <CSpinner size="sm" className="me-1" />}
               {t('comments.send')}
