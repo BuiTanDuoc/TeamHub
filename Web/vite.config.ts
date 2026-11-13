@@ -9,8 +9,8 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
-    resolve: { alias: { '@': path.resolve(__dirname, 'src') } },
-    css: { preprocessorOptions: { scss: { quietDeps: true, silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'mixed-decls'] } } },
+    resolve: { alias: { '@': path.resolve(import.meta.dirname, 'src') } },
+    css: { preprocessorOptions: { scss: { quietDeps: true, silenceDeprecations: ['import', 'global-builtin', 'color-functions'] } } },
     server: {
       port: 5173, // khớp Cors:AllowedOrigins trong appsettings.json
       proxy: {
