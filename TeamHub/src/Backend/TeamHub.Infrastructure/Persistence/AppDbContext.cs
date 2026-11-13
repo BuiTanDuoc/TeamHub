@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using TeamHub.Application.Common.Abstractions;
 using TeamHub.Domain.Bugs;
 using TeamHub.Domain.Common;
+using TeamHub.Domain.Notifications;
 using TeamHub.Domain.Projects;
 using TeamHub.Domain.Teams;
 using TeamHub.Domain.Users;
@@ -22,6 +23,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
     public DbSet<WorkItem> WorkItems => Set<WorkItem>();
     public DbSet<WorkItemHistory> WorkItemHistories => Set<WorkItemHistory>();
     public DbSet<WorkItemComment> WorkItemComments => Set<WorkItemComment>();
+    public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<Bug> Bugs => Set<Bug>();
     public DbSet<BugStatusHistory> BugStatusHistories => Set<BugStatusHistory>();
 

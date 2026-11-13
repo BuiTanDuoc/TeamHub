@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TeamHub.Domain.Bugs;
+using TeamHub.Domain.Notifications;
 using TeamHub.Domain.Projects;
 using TeamHub.Domain.Teams;
 using TeamHub.Domain.Users;
@@ -18,6 +19,7 @@ public interface IAppDbContext
     DbSet<WorkItem> WorkItems { get; }
     DbSet<WorkItemHistory> WorkItemHistories { get; }
     DbSet<WorkItemComment> WorkItemComments { get; }
+    DbSet<Notification> Notifications { get; }
     DbSet<Bug> Bugs { get; }
     DbSet<BugStatusHistory> BugStatusHistories { get; }
 

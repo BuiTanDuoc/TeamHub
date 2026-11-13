@@ -2,11 +2,14 @@ using Mediator;
 using Microsoft.EntityFrameworkCore;
 using TeamHub.Application.Common.Abstractions;
 using TeamHub.Application.Common.Exceptions;
+using TeamHub.Application.Notifications;
+using TeamHub.Domain.Notifications;
 using TeamHub.Domain.WorkItems;
 
 namespace TeamHub.Application.Tasks.Commands.ChangeTaskStatus;
 
-public sealed class ChangeTaskStatusHandler(IAppDbContext db, ICurrentUser currentUser, TimeProvider timeProvider)
+public sealed class ChangeTaskStatusHandler(
+    IAppDbContext db, ICurrentUser currentUser, TimeProvider timeProvider, INotificationDispatcher notifications)
     : ICommandHandler<ChangeTaskStatusCommand, Unit>
 {
     public async ValueTask<Unit> Handle(ChangeTaskStatusCommand command, CancellationToken cancellationToken)
@@ -27,7 +30,13 @@ public sealed class ChangeTaskStatusHandler(IAppDbContext db, ICurrentUser curre
         db.WorkItemHistories.Add(new WorkItemHistory(item.TeamId, item.Id, WorkItemField.Status,
             from.ToString(), item.Status.ToString(), userId, now));
 
+        // Báo cho người được giao và người tạo task (trừ người vừa đổi trạng thái)
+        await notifications.StageTaskEventAsync(item, userId, NotificationType.TaskStatusChanged,
+            item.Status.ToString(), [item.AssigneeId, item.ReporterId], cancellationToken);
+
         await db.SaveChangesAsync(cancellationToken);
+        await notifications.PublishStagedAsync(cancellationToken);
+
         return Unit.Value;
     }
 }

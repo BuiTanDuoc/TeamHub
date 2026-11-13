@@ -2,12 +2,15 @@ using Mediator;
 using Microsoft.EntityFrameworkCore;
 using TeamHub.Application.Common.Abstractions;
 using TeamHub.Application.Common.Exceptions;
+using TeamHub.Application.Notifications;
 using TeamHub.Domain.Exceptions;
+using TeamHub.Domain.Notifications;
 using TeamHub.Domain.WorkItems;
 
 namespace TeamHub.Application.Tasks.Commands.AssignTask;
 
-public sealed class AssignTaskHandler(IAppDbContext db, ICurrentUser currentUser, TimeProvider timeProvider)
+public sealed class AssignTaskHandler(
+    IAppDbContext db, ICurrentUser currentUser, TimeProvider timeProvider, INotificationDispatcher notifications)
     : ICommandHandler<AssignTaskCommand, Unit>
 {
     public async ValueTask<Unit> Handle(AssignTaskCommand command, CancellationToken cancellationToken)
@@ -41,7 +44,16 @@ public sealed class AssignTaskHandler(IAppDbContext db, ICurrentUser currentUser
             NameOf(item.AssigneeId), NameOf(command.AssigneeId), userId, timeProvider.GetUtcNow()));
 
         item.Assign(command.AssigneeId);
+
+        // Báo cho người vừa được giao (người tự giao cho mình sẽ bị bỏ qua)
+        if (command.AssigneeId is { } newAssigneeId)
+        {
+            await notifications.StageTaskEventAsync(item, userId, NotificationType.TaskAssigned, null,
+                [newAssigneeId], cancellationToken);
+        }
+
         await db.SaveChangesAsync(cancellationToken);
+        await notifications.PublishStagedAsync(cancellationToken);
 
         return Unit.Value;
     }

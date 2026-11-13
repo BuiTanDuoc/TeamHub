@@ -10,6 +10,7 @@ using TeamHub.Api.Middleware;
 using TeamHub.Api.OpenApi;
 using TeamHub.Application;
 using TeamHub.Application.Common;
+using TeamHub.Application.Notifications;
 using TeamHub.Application.Tasks;
 using TeamHub.Application.Common.Abstractions;
 using TeamHub.Infrastructure;
@@ -24,6 +25,7 @@ builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddPersistence(configuration);
 builder.Services.AddIdentityServices(configuration);
 builder.Services.AddApplication();
+builder.Services.AddSingleton<INotificationPusher, SignalRNotificationPusher>();
 builder.Services.Configure<PagingOptions>(configuration.GetSection(PagingOptions.SectionName));
 builder.Services.Configure<KanbanOptions>(configuration.GetSection(KanbanOptions.SectionName));
 
@@ -94,6 +96,7 @@ app.MapUsersEndpoints();
 app.MapProjectsEndpoints();
 app.MapTasksEndpoints();
 app.MapCommentsEndpoints();
+app.MapNotificationsEndpoints();
 app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapHub<BoardHub>("/hubs/board");
 

@@ -2,6 +2,7 @@ using FluentValidation;
 using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using TeamHub.Application.Common.Behaviors;
+using TeamHub.Application.Notifications;
 
 namespace TeamHub.Application;
 
@@ -18,6 +19,9 @@ public static class DependencyInjection
             // Thứ tự quan trọng (ngoài → trong): kiểm tra quyền trước, rồi mới validate dữ liệu
             options.PipelineBehaviors = [typeof(AuthorizationBehavior<,>), typeof(ValidationBehavior<,>)];
         });
+
+        // Scoped: gom thông báo của một request, đẩy realtime sau khi lưu
+        services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
 
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
 
