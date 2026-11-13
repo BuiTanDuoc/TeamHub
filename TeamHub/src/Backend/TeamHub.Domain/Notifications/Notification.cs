@@ -11,7 +11,7 @@ public sealed class Notification : AuditableEntity
     private Notification() { } // EF Core
 
     public Notification(Guid recipientId, NotificationType type, string title, string message,
-        Guid? actorId, Guid? teamId, Guid? projectId, Guid? workItemId)
+        Guid? actorId, Guid? teamId, Guid? projectId, Guid? workItemId, Guid? bugId = null)
     {
         RecipientId = recipientId;
         Type = type;
@@ -21,6 +21,7 @@ public sealed class Notification : AuditableEntity
         TeamId = teamId;
         ProjectId = projectId;
         WorkItemId = workItemId;
+        BugId = bugId;
     }
 
     public Guid RecipientId { get; private set; }
@@ -34,6 +35,7 @@ public sealed class Notification : AuditableEntity
     public Guid? TeamId { get; private set; }
     public Guid? ProjectId { get; private set; }
     public Guid? WorkItemId { get; private set; }
+    public Guid? BugId { get; private set; }
 
     public bool IsRead { get; private set; }
     public DateTimeOffset? ReadAt { get; private set; }

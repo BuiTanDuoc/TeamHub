@@ -25,12 +25,12 @@ public static class CommentsEndpoints
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound);
 
-        group.MapPost("/", async (Guid teamId, Guid projectId, Guid taskId, CommentRequest body, IMediator mediator, CancellationToken ct) =>
+        group.MapPost("/", async (Guid teamId, Guid projectId, Guid taskId, AddCommentRequest body, IMediator mediator, CancellationToken ct) =>
             {
-                var id = await mediator.Send(new AddCommentCommand(teamId, projectId, taskId, body.Body), ct);
+                var id = await mediator.Send(new AddCommentCommand(teamId, projectId, taskId, body.Body, body.MentionedUserIds), ct);
                 return TypedResults.Created($"/api/v1/teams/{teamId}/projects/{projectId}/tasks/{taskId}/comments", new IdResponse(id));
             })
-            .WithSummary("Thêm bình luận (Tester trở lên)")
+            .WithSummary("Thêm bình luận (Tester trở lên); mentionedUserIds để @nhắc thành viên team")
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound);
 

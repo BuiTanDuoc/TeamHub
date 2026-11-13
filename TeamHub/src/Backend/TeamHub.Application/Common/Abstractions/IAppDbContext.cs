@@ -20,6 +20,8 @@ public interface IAppDbContext
     DbSet<WorkItemHistory> WorkItemHistories { get; }
     DbSet<WorkItemComment> WorkItemComments { get; }
     DbSet<Notification> Notifications { get; }
+    DbSet<NotificationPreference> NotificationPreferences { get; }
+    DbSet<DeviceToken> DeviceTokens { get; }
     DbSet<Bug> Bugs { get; }
     DbSet<BugStatusHistory> BugStatusHistories { get; }
 

@@ -332,12 +332,58 @@ namespace TeamHub.Infrastructure.Migrations
                     b.ToTable("BugStatusHistories", (string)null);
                 });
 
+            modelBuilder.Entity("TeamHub.Domain.Notifications.DeviceToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("LastSeenAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Platform")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DeviceTokens", (string)null);
+                });
+
             modelBuilder.Entity("TeamHub.Domain.Notifications.Notification", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ActorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BugId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("CreatedAt")
@@ -390,6 +436,33 @@ namespace TeamHub.Infrastructure.Migrations
                     b.HasIndex("RecipientId", "IsRead", "CreatedAt");
 
                     b.ToTable("Notifications", (string)null);
+                });
+
+            modelBuilder.Entity("TeamHub.Domain.Notifications.NotificationPreference", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("InAppEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PushEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Type")
+                        .IsUnique();
+
+                    b.ToTable("NotificationPreferences", (string)null);
                 });
 
             modelBuilder.Entity("TeamHub.Domain.Projects.Project", b =>
@@ -1061,11 +1134,29 @@ namespace TeamHub.Infrastructure.Migrations
                     b.Navigation("ChangedBy");
                 });
 
+            modelBuilder.Entity("TeamHub.Domain.Notifications.DeviceToken", b =>
+                {
+                    b.HasOne("TeamHub.Domain.Users.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TeamHub.Domain.Notifications.Notification", b =>
                 {
                     b.HasOne("TeamHub.Domain.Users.AppUser", null)
                         .WithMany()
                         .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TeamHub.Domain.Notifications.NotificationPreference", b =>
+                {
+                    b.HasOne("TeamHub.Domain.Users.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

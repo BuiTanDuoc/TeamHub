@@ -3,7 +3,9 @@ using Microsoft.Extensions.Options;
 using TeamHub.Application.Common;
 using TeamHub.Application.Notifications.Commands.MarkAllNotificationsRead;
 using TeamHub.Application.Notifications.Commands.MarkNotificationRead;
+using TeamHub.Application.Notifications.Commands.UpdateNotificationPreferences;
 using TeamHub.Application.Notifications.Queries.GetMyNotifications;
+using TeamHub.Application.Notifications.Queries.GetNotificationPreferences;
 using TeamHub.Application.Notifications.Queries.GetUnreadNotificationCount;
 
 namespace TeamHub.Api.Endpoints;
@@ -41,6 +43,20 @@ public static class NotificationsEndpoints
                 TypedResults.Ok(new { updated = await mediator.Send(new MarkAllNotificationsReadCommand(), ct) }))
             .WithSummary("Đánh dấu tất cả thông báo của tôi đã đọc");
 
+        group.MapGet("/preferences", async (IMediator mediator, CancellationToken ct) =>
+                TypedResults.Ok(await mediator.Send(new GetNotificationPreferencesQuery(), ct)))
+            .WithSummary("Cài đặt nhận thông báo của tôi cho từng loại (mặc định bật cả trong app và push)");
+
+        group.MapPut("/preferences", async (UpdateNotificationPreferencesRequest body, IMediator mediator, CancellationToken ct) =>
+            {
+                await mediator.Send(new UpdateNotificationPreferencesCommand(body.Items), ct);
+                return TypedResults.NoContent();
+            })
+            .WithSummary("Lưu cài đặt cho các loại thông báo gửi lên; loại không gửi giữ nguyên")
+            .ProducesProblem(StatusCodes.Status400BadRequest);
+
         return app;
     }
 }
+
+public sealed record UpdateNotificationPreferencesRequest(IReadOnlyList<NotificationPreferenceItem> Items);

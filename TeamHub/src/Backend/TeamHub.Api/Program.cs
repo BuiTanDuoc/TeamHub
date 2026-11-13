@@ -8,8 +8,10 @@ using TeamHub.Api.Endpoints;
 using TeamHub.Api.Hubs;
 using TeamHub.Api.Jobs;
 using TeamHub.Api.Middleware;
+using TeamHub.Api.Push;
 using TeamHub.Api.OpenApi;
 using TeamHub.Application;
+using TeamHub.Application.Bugs;
 using TeamHub.Application.Common;
 using TeamHub.Application.Notifications;
 using TeamHub.Application.Tasks;
@@ -27,9 +29,11 @@ builder.Services.AddPersistence(configuration);
 builder.Services.AddIdentityServices(configuration);
 builder.Services.AddApplication();
 builder.Services.AddTeamHubJobs(configuration);
+builder.Services.AddTeamHubPush(configuration);
 builder.Services.AddSingleton<INotificationPusher, SignalRNotificationPusher>();
 builder.Services.Configure<PagingOptions>(configuration.GetSection(PagingOptions.SectionName));
 builder.Services.Configure<KanbanOptions>(configuration.GetSection(KanbanOptions.SectionName));
+builder.Services.Configure<BugOptions>(configuration.GetSection(BugOptions.SectionName));
 
 // ---------- Xác thực JWT + phân quyền ----------
 builder.Services.AddJwtAuthentication();
@@ -97,8 +101,10 @@ app.MapTeamsEndpoints();
 app.MapUsersEndpoints();
 app.MapProjectsEndpoints();
 app.MapTasksEndpoints();
+app.MapBugsEndpoints();
 app.MapCommentsEndpoints();
 app.MapNotificationsEndpoints();
+app.MapDevicesEndpoints();
 app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapHub<BoardHub>("/hubs/board");
 
