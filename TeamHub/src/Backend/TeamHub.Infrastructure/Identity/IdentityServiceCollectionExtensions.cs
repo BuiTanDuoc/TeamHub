@@ -29,6 +29,7 @@ public static class IdentityServiceCollectionExtensions
         services.AddSingleton<JwtTokenService>();
         services.AddScoped<IGoogleTokenValidator, GoogleTokenValidator>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserAdministration, UserAdministration>();
         services.AddScoped<IdentitySeeder>();
 
         return services;

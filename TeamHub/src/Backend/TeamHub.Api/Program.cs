@@ -99,6 +99,7 @@ app.MapGet("/health", () => TypedResults.Ok(new { status = "ok" })).AllowAnonymo
 app.MapAuthEndpoints();
 app.MapTeamsEndpoints();
 app.MapUsersEndpoints();
+app.MapAccountEndpoints();
 app.MapProjectsEndpoints();
 app.MapTasksEndpoints();
 app.MapBugsEndpoints();

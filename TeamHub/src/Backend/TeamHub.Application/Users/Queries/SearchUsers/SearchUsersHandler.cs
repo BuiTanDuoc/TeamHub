@@ -9,7 +9,10 @@ public sealed class SearchUsersHandler(IAppDbContext db) : IQueryHandler<SearchU
 {
     public async ValueTask<PagedResult<UserSummaryDto>> Handle(SearchUsersQuery query, CancellationToken cancellationToken)
     {
-        var users = db.Users.AsNoTracking().Where(u => u.IsActive);
+        var users = db.Users.AsNoTracking();
+
+        if (query.IsActive is { } isActive)
+            users = users.Where(u => u.IsActive == isActive);
 
         var search = query.Search?.Trim();
         if (!string.IsNullOrEmpty(search))
@@ -17,7 +20,7 @@ public sealed class SearchUsersHandler(IAppDbContext db) : IQueryHandler<SearchU
 
         return await users
             .OrderBy(u => u.FullName).ThenBy(u => u.Id)
-            .Select(u => new UserSummaryDto(u.Id, u.Email ?? string.Empty, u.FullName, u.AvatarUrl))
+            .Select(u => new UserSummaryDto(u.Id, u.Email ?? string.Empty, u.FullName, u.AvatarUrl, u.IsActive, u.IsSystemAdmin))
             .ToPagedResultAsync(query.Page, query.PageSize, cancellationToken);
     }
 }

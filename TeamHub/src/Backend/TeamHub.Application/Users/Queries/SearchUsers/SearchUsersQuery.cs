@@ -4,6 +4,9 @@ using TeamHub.Application.Common.Models;
 
 namespace TeamHub.Application.Users.Queries.SearchUsers;
 
-/// <summary>Tìm user đang hoạt động theo tên/email (để chọn TeamLead khi tạo team). Chỉ SystemAdmin.</summary>
-public sealed record SearchUsersQuery(string? Search, int Page, int PageSize)
+/// <summary>
+/// Danh sách/tìm người dùng theo tên hoặc email. IsActive null = cả đang hoạt động và đã vô hiệu hóa
+/// (chọn TeamLead hay thêm vào team nên truyền true). Chỉ SystemAdmin.
+/// </summary>
+public sealed record SearchUsersQuery(string? Search, bool? IsActive, int Page, int PageSize)
     : IQuery<PagedResult<UserSummaryDto>>, IPagedQuery, IRequireSystemAdmin;
