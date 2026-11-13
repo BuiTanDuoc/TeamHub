@@ -89,6 +89,7 @@ app.MapGet("/health", () => TypedResults.Ok(new { status = "ok" })).AllowAnonymo
 app.MapAuthEndpoints();
 app.MapTeamsEndpoints();
 app.MapUsersEndpoints();
+app.MapProjectsEndpoints();
 app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapHub<BoardHub>("/hubs/board");
 

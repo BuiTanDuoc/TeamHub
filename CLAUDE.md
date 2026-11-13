@@ -260,6 +260,8 @@ pnpm gen:api
 | 2026-11-12 | Chỉ SystemAdmin tạo team (kèm TeamLead đầu tiên) và ngừng/kích hoạt team; TeamLead quản lý thành viên | Khớp quy tắc "chỉ vào team khi được mời/Admin thêm"; team luôn có ít nhất một lead |
 | 2026-11-12 | Thêm thành viên theo email của user đã có tài khoản (chưa làm invite link/email) | Giữ MVP gọn; invite sẽ bổ sung cùng module Thông báo |
 | 2026-11-12 | `PagedResult<T>` + offset pagination cho danh sách nhỏ (team, thành viên); `Paging:MaxPageSize` trong appsettings | Keyset chỉ cần cho danh sách lớn (task, bug) |
+| 2026-11-12 | Route dự án lồng dưới team (`/api/v1/teams/{teamId}/projects`); TeamLead tạo/sửa/xóa mềm/đổi trạng thái, mọi thành viên team xem | `AuthorizationBehavior` kiểm tra quyền theo `TeamId` thống nhất; dự án hiển thị cho cả team |
+| 2026-11-12 | `ProjectMember` = tập người được giao task/bug của dự án, phải là thành viên team; Key dự án 2-10 ký tự, không đổi sau khi tạo | Key nằm trong mã task/bug (`TH-123`) nên đổi sẽ làm sai mã đã dùng |
 | 2026-11-12 | OpenAPI built-in (`AddOpenApi`) + Swagger UI tại `/swagger` (chỉ Development), khai báo JWT Bearer qua transformer | Thử API có token ngay trên Swagger; `Shared` sinh client từ `/openapi/v1.json` |
 
 ## 15. Lộ trình gợi ý
