@@ -62,6 +62,7 @@ public sealed class FcmPushSender(IOptions<FcmPushOptions> options, ILogger<FcmP
             ["title"] = message.Title,
             ["body"] = message.Body
         };
+#pragma warning disable CS0618
 
         return new Message
         {
@@ -81,6 +82,7 @@ public sealed class FcmPushSender(IOptions<FcmPushOptions> options, ILogger<FcmP
                 TimeToLive = TimeSpan.FromSeconds(settings.TimeToLiveSeconds)
             }
         };
+#pragma warning restore CS0618
     }
 
     private static FirebaseMessaging CreateMessaging(FcmPushOptions settings)
