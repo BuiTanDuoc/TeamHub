@@ -4,7 +4,7 @@ import type {
   AddTeamMemberRequest, AppNotification, AuthResult, CreatedTask, CreateProjectRequest, CreateTaskRequest,
   CreateTeamRequest, CursorPagedResult, IdResponse, KanbanBoard, MeResponse, PagedResult, Project, ProjectMember,
   ProjectStatus, Task, TaskComment, TaskDetail, TaskHistoryEntry, Team, TeamMember, TeamRole, UpdateProjectRequest,
-  UpdateTaskRequest, UpdateTeamRequest, UserSummary, WorkItemStatus, WorkItemType,
+  UpdateTaskRequest, UpdateTeamRequest, UserSummary, UserDetail, CreateUserRequest, WorkItemStatus, WorkItemType,
 } from './types'
 
 const teamPath = (teamId: string) => `/api/v1/teams/${teamId}`
@@ -36,9 +36,22 @@ export const authApi = {
   me: () => api.get<MeResponse>('/api/v1/auth/me'),
 }
 
+/** Toàn bộ /api/v1/users chỉ dành cho SystemAdmin. */
 export const usersApi = {
-  /** Chỉ SystemAdmin. */
-  search: (search: string, pageSize = 10) => api.get<PagedResult<UserSummary>>('/api/v1/users', { search, page: 1, pageSize }),
+  search: (search: string, options: { isActive?: boolean; page?: number; pageSize?: number } = {}) =>
+    api.get<PagedResult<UserSummary>>('/api/v1/users', { search, isActive: options.isActive, page: options.page ?? 1, pageSize: options.pageSize ?? 10 }),
+  get: (userId: string) => api.get<UserDetail>(`/api/v1/users/${userId}`),
+  create: (body: CreateUserRequest) => api.post<IdResponse>('/api/v1/users', body),
+  setActive: (userId: string, isActive: boolean) => api.put(`/api/v1/users/${userId}/active`, { isActive }),
+  setSystemAdmin: (userId: string, isSystemAdmin: boolean) => api.put(`/api/v1/users/${userId}/system-admin`, { isSystemAdmin }),
+  resetPassword: (userId: string, newPassword: string) => api.post<void>(`/api/v1/users/${userId}/reset-password`, { newPassword }),
+}
+
+/** Thao tác trên tài khoản của chính mình. */
+export const accountApi = {
+  updateProfile: (fullName: string, avatarUrl: string | null) => api.put('/api/v1/account/profile', { fullName, avatarUrl }),
+  /** Thành công thì mọi phiên (kể cả phiên hiện tại) bị thu hồi → phải đăng nhập lại. */
+  changePassword: (currentPassword: string, newPassword: string) => api.post<void>('/api/v1/account/change-password', { currentPassword, newPassword }),
 }
 
 export const teamsApi = {

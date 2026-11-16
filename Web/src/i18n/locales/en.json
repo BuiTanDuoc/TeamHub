@@ -33,7 +33,10 @@
     "projectKey": "2-10 letters/digits, starting with a letter",
     "endBeforeStart": "End date must be on or after the start date",
     "estimate": "Enter hours between 0 and 99999",
-    "subTaskParent": "A sub-task requires a parent task"
+    "subTaskParent": "A sub-task requires a parent task",
+    "passwordMismatch": "Passwords do not match",
+    "passwordSame": "New password must differ from the current one",
+    "httpsUrl": "Must be a valid https:// link"
   },
   "auth": {
     "login": "Sign in",
@@ -64,7 +67,9 @@
     "dashboard": "Dashboard",
     "teams": "Teams",
     "notifications": "Notifications",
-    "myTeams": "My teams"
+    "myTeams": "My teams",
+    "administration": "Administration",
+    "users": "Users"
   },
   "dashboard": {
     "welcome": "Welcome, {{name}}",
@@ -121,7 +126,9 @@
     "addedAt": "Added",
     "noCandidates": "All team members are already in this project.",
     "selectMember": "Select a member",
-    "removeFromProjectConfirm": "Remove {{name}} from this project?"
+    "removeFromProjectConfirm": "Remove {{name}} from this project?",
+    "pickUser": "Pick a user",
+    "pickUserHint": "Optional: search active accounts and fill the email below."
   },
   "projects": {
     "name": "Project name",
@@ -322,5 +329,64 @@
     "noteRequiredHint": "A reason is required for this status.",
     "originalBug": "Original bug",
     "selectOriginal": "Select the original bug"
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "Create and manage accounts across the whole system",
+    "create": "New user",
+    "created": "Account created",
+    "detail": "User",
+    "fullName": "Full name",
+    "initialPassword": "Initial password",
+    "passwordHint": "At least 8 characters with an uppercase letter, a lowercase letter and a digit.",
+    "createHint": "Share the initial password securely; the user can change it under Account. Then add them to a team.",
+    "grantSystemAdmin": "Grant System admin",
+    "searchPlaceholder": "Search by name or email",
+    "status": "Status",
+    "allStatuses": "All statuses",
+    "active": "Active",
+    "inactive": "Deactivated",
+    "systemRole": "System role",
+    "empty": "No users found",
+    "total_one": "{{count}} user",
+    "total_other": "{{count}} users",
+    "createdAt": "Created",
+    "teamsAndRoles": "Teams and roles",
+    "noTeams": "Not in any team yet",
+    "addToTeam": "Add to team",
+    "selectTeam": "Select a team",
+    "noTeamsToAdd": "No other active team to add this user to.",
+    "inactiveCannotJoin": "Activate this account before adding it to a team.",
+    "accountActions": "Account",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "activated": "Account activated",
+    "deactivated": "Account deactivated",
+    "deactivateConfirm": "Deactivate {{name}}? All their sessions are revoked and push devices removed. Team roles are kept.",
+    "deactivateNote": "Deactivated users keep their team roles and can be reactivated. A signed-in access token stays valid until it expires.",
+    "grantAdmin": "Grant System admin",
+    "revokeAdmin": "Revoke System admin",
+    "adminGranted": "System admin granted",
+    "adminRevoked": "System admin revoked",
+    "revokeAdminConfirm": "Revoke System admin from {{name}}?",
+    "activateFirst": "Activate the account first",
+    "cannotSelf": "You cannot do this to your own account",
+    "resetPassword": "Reset password",
+    "resetPasswordHint": "Set a new password for {{name}}. All their sessions will be signed out.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordReset": "Password reset"
+  },
+  "account": {
+    "title": "My account",
+    "subtitle": "Your profile and password",
+    "profile": "Profile",
+    "emailFixed": "Email cannot be changed.",
+    "avatarUrl": "Avatar URL",
+    "avatarHint": "https link to an image; leave empty to remove.",
+    "changePassword": "Change password",
+    "changePasswordNote": "All sessions, including this one, are signed out after the change.",
+    "currentPassword": "Current password",
+    "passwordChanged": "Password changed. Please sign in again."
   }
 }

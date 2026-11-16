@@ -90,6 +90,26 @@ export interface UserSummary {
   email: string
   fullName: string
   avatarUrl: string | null
+  isActive: boolean
+  isSystemAdmin: boolean
+}
+
+export interface UserTeam {
+  teamId: string
+  teamName: string
+  role: TeamRole
+}
+
+export interface UserDetail extends UserSummary {
+  createdAt: IsoDateTime
+  teams: UserTeam[]
+}
+
+export interface CreateUserRequest {
+  email: string
+  fullName: string
+  password: string
+  isSystemAdmin: boolean
 }
 
 export interface Team {

@@ -19,7 +19,7 @@ export function UserPicker({ value, onChange, invalid }: Props) {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
   const debounced = useDebounce(search.trim(), 300)
-  const query = useQuery({ queryKey: qk.users(debounced), queryFn: () => usersApi.search(debounced), enabled: !value })
+  const query = useQuery({ queryKey: qk.users(debounced), queryFn: () => usersApi.search(debounced, { isActive: true }), enabled: !value })
 
   if (value) {
     return (

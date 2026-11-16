@@ -33,7 +33,10 @@
     "projectKey": "2-10 ký tự chữ/số, bắt đầu bằng chữ",
     "endBeforeStart": "Ngày kết thúc phải sau hoặc bằng ngày bắt đầu",
     "estimate": "Nhập số giờ từ 0 đến 99999",
-    "subTaskParent": "Sub-task bắt buộc phải có task cha"
+    "subTaskParent": "Sub-task bắt buộc phải có task cha",
+    "passwordMismatch": "Mật khẩu nhập lại không khớp",
+    "passwordSame": "Mật khẩu mới phải khác mật khẩu hiện tại",
+    "httpsUrl": "Phải là đường dẫn https:// hợp lệ"
   },
   "auth": {
     "login": "Đăng nhập",
@@ -64,7 +67,9 @@
     "dashboard": "Tổng quan",
     "teams": "Team",
     "notifications": "Thông báo",
-    "myTeams": "Team của tôi"
+    "myTeams": "Team của tôi",
+    "administration": "Quản trị",
+    "users": "Người dùng"
   },
   "dashboard": {
     "welcome": "Xin chào, {{name}}",
@@ -120,7 +125,9 @@
     "addedAt": "Ngày thêm",
     "noCandidates": "Mọi thành viên team đã ở trong dự án này.",
     "selectMember": "Chọn thành viên",
-    "removeFromProjectConfirm": "Xóa {{name}} khỏi dự án này?"
+    "removeFromProjectConfirm": "Xóa {{name}} khỏi dự án này?",
+    "pickUser": "Chọn người dùng",
+    "pickUserHint": "Không bắt buộc: tìm tài khoản đang hoạt động để điền email bên dưới."
   },
   "projects": {
     "name": "Tên dự án",
@@ -321,5 +328,63 @@
     "noteRequiredHint": "Trạng thái này bắt buộc nhập lý do.",
     "originalBug": "Bug gốc",
     "selectOriginal": "Chọn bug gốc"
+  },
+  "users": {
+    "title": "Người dùng",
+    "subtitle": "Tạo và quản lý tài khoản toàn hệ thống",
+    "create": "Tạo người dùng",
+    "created": "Đã tạo tài khoản",
+    "detail": "Người dùng",
+    "fullName": "Họ và tên",
+    "initialPassword": "Mật khẩu ban đầu",
+    "passwordHint": "Tối thiểu 8 ký tự, gồm chữ hoa, chữ thường và chữ số.",
+    "createHint": "Hãy gửi mật khẩu ban đầu qua kênh an toàn; người dùng tự đổi trong mục Tài khoản. Sau đó thêm họ vào team.",
+    "grantSystemAdmin": "Cấp quyền Quản trị hệ thống",
+    "searchPlaceholder": "Tìm theo tên hoặc email",
+    "status": "Trạng thái",
+    "allStatuses": "Mọi trạng thái",
+    "active": "Đang hoạt động",
+    "inactive": "Đã vô hiệu hóa",
+    "systemRole": "Vai trò hệ thống",
+    "empty": "Không có người dùng",
+    "total_other": "{{count}} người dùng",
+    "createdAt": "Ngày tạo",
+    "teamsAndRoles": "Team và vai trò",
+    "noTeams": "Chưa thuộc team nào",
+    "addToTeam": "Thêm vào team",
+    "selectTeam": "Chọn team",
+    "noTeamsToAdd": "Không còn team hoạt động nào để thêm.",
+    "inactiveCannotJoin": "Hãy kích hoạt tài khoản trước khi thêm vào team.",
+    "accountActions": "Tài khoản",
+    "activate": "Kích hoạt",
+    "deactivate": "Vô hiệu hóa",
+    "activated": "Đã kích hoạt tài khoản",
+    "deactivated": "Đã vô hiệu hóa tài khoản",
+    "deactivateConfirm": "Vô hiệu hóa {{name}}? Mọi phiên đăng nhập bị thu hồi và thiết bị push bị gỡ. Vai trò trong team được giữ nguyên.",
+    "deactivateNote": "Tài khoản bị vô hiệu hóa vẫn giữ vai trò trong team và có thể kích hoạt lại. Access token đang dùng vẫn hiệu lực đến khi hết hạn.",
+    "grantAdmin": "Cấp Quản trị hệ thống",
+    "revokeAdmin": "Thu hồi Quản trị hệ thống",
+    "adminGranted": "Đã cấp quyền Quản trị hệ thống",
+    "adminRevoked": "Đã thu hồi quyền Quản trị hệ thống",
+    "revokeAdminConfirm": "Thu hồi quyền Quản trị hệ thống của {{name}}?",
+    "activateFirst": "Hãy kích hoạt tài khoản trước",
+    "cannotSelf": "Bạn không thể làm điều này với chính tài khoản của mình",
+    "resetPassword": "Đặt lại mật khẩu",
+    "resetPasswordHint": "Đặt mật khẩu mới cho {{name}}. Mọi phiên đăng nhập của họ sẽ bị đăng xuất.",
+    "newPassword": "Mật khẩu mới",
+    "confirmPassword": "Nhập lại mật khẩu",
+    "passwordReset": "Đã đặt lại mật khẩu"
+  },
+  "account": {
+    "title": "Tài khoản của tôi",
+    "subtitle": "Hồ sơ và mật khẩu của bạn",
+    "profile": "Hồ sơ",
+    "emailFixed": "Không thể đổi email.",
+    "avatarUrl": "Đường dẫn ảnh đại diện",
+    "avatarHint": "Liên kết https tới ảnh; để trống để xóa ảnh.",
+    "changePassword": "Đổi mật khẩu",
+    "changePasswordNote": "Sau khi đổi, mọi phiên đăng nhập (kể cả phiên này) sẽ bị đăng xuất.",
+    "currentPassword": "Mật khẩu hiện tại",
+    "passwordChanged": "Đã đổi mật khẩu. Vui lòng đăng nhập lại."
   }
 }

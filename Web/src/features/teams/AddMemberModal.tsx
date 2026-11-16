@@ -1,16 +1,19 @@
 import { CButton, CForm, CFormInput, CFormSelect, CModal, CModalBody, CModalFooter, CModalHeader, CModalTitle, CSpinner } from '@coreui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { teamsApi } from '@/shared/api/endpoints'
 import { qk } from '@/shared/api/queryKeys'
 import { TEAM_ROLES, type TeamRole } from '@/shared/api/types'
+import { useAuthStore } from '@/shared/auth/authStore'
+import type { UserSummary } from '@/shared/api/types'
 import { Field } from '@/shared/components/Field'
 import { useApiError } from '@/shared/hooks/useApiError'
 import { toast } from '@/shared/stores/uiStore'
+import { UserPicker } from './UserPicker'
 
 const schema = z.object({
   email: z.string().trim().min(1, 'validation.required').max(256, 'validation.tooLong').email('validation.email'),
@@ -32,12 +35,17 @@ export function AddMemberModal({ teamId, visible, onClose }: Props) {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { applyFieldErrors } = useApiError()
+  const isAdmin = useAuthStore((s) => s.user?.isSystemAdmin ?? false)
+  const [picked, setPicked] = useState<UserSummary | null>(null)
   const {
-    register, handleSubmit, reset, setError, formState: { errors },
+    register, handleSubmit, reset, setError, setValue, formState: { errors },
   } = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { email: '', role: 'Developer', capacity: '' } })
 
   useEffect(() => {
-    if (visible) reset({ email: '', role: 'Developer', capacity: '' })
+    if (visible) {
+      reset({ email: '', role: 'Developer', capacity: '' })
+      setPicked(null)
+    }
   }, [visible, reset])
 
   const mutation = useMutation({
@@ -59,6 +67,17 @@ export function AddMemberModal({ teamId, visible, onClose }: Props) {
           <CModalTitle>{t('members.add')}</CModalTitle>
         </CModalHeader>
         <CModalBody>
+          {isAdmin && (
+            <Field label={t('members.pickUser')} hint={t('members.pickUserHint')}>
+              <UserPicker
+                value={picked}
+                onChange={(u) => {
+                  setPicked(u)
+                  setValue('email', u?.email ?? '', { shouldValidate: true })
+                }}
+              />
+            </Field>
+          )}
           <Field label={t('auth.email')} required error={errors.email?.message} hint={t('members.addHint')} htmlFor="member-email">
             <CFormInput id="member-email" type="email" invalid={!!errors.email} {...register('email')} />
           </Field>

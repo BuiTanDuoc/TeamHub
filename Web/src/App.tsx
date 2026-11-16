@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import DefaultLayout from './layout/DefaultLayout'
 import { useAuthStore } from './shared/auth/authStore'
+import { RequireAdmin } from './shared/auth/RequireAdmin'
 import { RequireAuth } from './shared/auth/RequireAuth'
 import { ToastHost } from './shared/components/ToastHost'
 
@@ -14,6 +15,8 @@ const TeamDetailPage = lazy(() => import('./features/teams/TeamDetailPage'))
 const ProjectPage = lazy(() => import('./features/projects/ProjectPage'))
 const NotificationsPage = lazy(() => import('./features/notifications/NotificationsPage'))
 const NotificationPreferencesPage = lazy(() => import('./features/notifications/NotificationPreferencesPage'))
+const AccountPage = lazy(() => import('./features/account/AccountPage'))
+const UsersPage = lazy(() => import('./features/admin/UsersPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
 export default function App() {
@@ -41,6 +44,10 @@ export default function App() {
               <Route path="teams/:teamId" element={<TeamDetailPage />} />
               <Route path="teams/:teamId/projects/:projectId" element={<ProjectPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
+              <Route path="account" element={<AccountPage />} />
+              <Route element={<RequireAdmin />}>
+                <Route path="admin/users" element={<UsersPage />} />
+              </Route>
               <Route path="settings/notifications" element={<NotificationPreferencesPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>

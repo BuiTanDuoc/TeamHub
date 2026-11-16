@@ -1,4 +1,4 @@
-import { cilBell, cilGroup, cilSpeedometer } from '@coreui/icons'
+import { cilBell, cilGroup, cilPeople, cilSpeedometer } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import {
   CBadge, CCloseButton, CNavGroup, CNavItem, CNavLink, CNavTitle, CSidebar, CSidebarBrand, CSidebarFooter,
@@ -29,6 +29,7 @@ function AppSidebarComponent() {
   const setShow = useUiStore((s) => s.setSidebarShow)
   const setUnfoldable = useUiStore((s) => s.setSidebarUnfoldable)
   const teams = useAuthStore((s) => s.teams)
+  const isAdmin = useAuthStore((s) => s.user?.isSystemAdmin ?? false)
   const unread = useQuery({ queryKey: qk.unreadCount, queryFn: notificationsApi.unreadCount, refetchInterval: 60_000 })
 
   return (
@@ -77,6 +78,18 @@ function AppSidebarComponent() {
             )}
           </CNavLink>
         </CNavItem>
+
+        {isAdmin && (
+          <>
+            <CNavTitle>{t('nav.administration')}</CNavTitle>
+            <CNavItem as="div">
+              <CNavLink as={NavLink} to="/admin/users">
+                <CIcon customClassName="nav-icon" icon={cilPeople} />
+                {t('nav.users')}
+              </CNavLink>
+            </CNavItem>
+          </>
+        )}
 
         {teams.length > 0 && (
           <>

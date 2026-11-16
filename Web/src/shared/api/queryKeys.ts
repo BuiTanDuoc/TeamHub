@@ -29,5 +29,7 @@ export const qk = {
   notificationPrefs: ['notification-preferences'] as const,
   notificationList: (unreadOnly: boolean) => ['notifications', 'list', unreadOnly] as const,
   unreadCount: ['notifications', 'unread-count'] as const,
-  users: (search: string) => ['users', search] as const,
+  users: (search: string) => ['users', 'picker', search] as const,
+  adminUsers: (search: string, isActive: string, page: number) => ['users', 'admin', search, isActive, page] as const,
+  user: (userId: string) => ['users', 'detail', userId] as const,
 }
