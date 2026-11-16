@@ -1,7 +1,7 @@
 import { api } from './client'
 import type {
   Bug, BugDetail, BugRequest, BugSeverity, BugStatus, BugStatusHistoryEntry, CreatedBug, KeysetPagedResult, NotificationPreference,
-  AddTeamMemberRequest, AppNotification, AuthResult, CreatedTask, CreateProjectRequest, CreateTaskRequest,
+  AddTeamMemberRequest, AppNotification, AuthResult, DevicePlatform, CreatedTask, CreateProjectRequest, CreateTaskRequest,
   CreateTeamRequest, CursorPagedResult, IdResponse, KanbanBoard, MeResponse, PagedResult, Project, ProjectMember,
   ProjectStatus, Task, TaskComment, TaskDetail, TaskHistoryEntry, Team, TeamMember, TeamRole, UpdateProjectRequest,
   UpdateTaskRequest, UpdateTeamRequest, UserSummary, UserDetail, CreateUserRequest, WorkItemStatus, WorkItemType,
@@ -137,6 +137,12 @@ export const bugsApi = {
   remove: (teamId: string, projectId: string, bugId: string) => api.delete(bugPath(teamId, projectId, bugId)),
   history: (teamId: string, projectId: string, bugId: string, page = 1, pageSize = 50) =>
     api.get<PagedResult<BugStatusHistoryEntry>>(`${bugPath(teamId, projectId, bugId)}/history`, { page, pageSize }),
+}
+
+/** Đăng ký/gỡ push token (FCM) của trình duyệt này cho tài khoản đang đăng nhập. */
+export const devicesApi = {
+  register: (token: string, platform: DevicePlatform) => api.post<void>('/api/v1/devices', { token, platform }),
+  unregister: (token: string) => api.delete(`/api/v1/devices?token=${encodeURIComponent(token)}`),
 }
 
 export const notificationsApi = {

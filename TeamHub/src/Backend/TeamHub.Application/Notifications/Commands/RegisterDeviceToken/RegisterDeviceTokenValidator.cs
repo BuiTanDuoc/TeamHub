@@ -6,9 +6,10 @@ public sealed class RegisterDeviceTokenValidator : AbstractValidator<RegisterDev
 {
     public RegisterDeviceTokenValidator()
     {
-        // Dạng ExponentPushToken[xxxx] hoặc ExpoPushToken[xxxx]; 200 khớp độ dài cột Token
-        RuleFor(x => x.Token).NotEmpty().MaximumLength(200)
-            .Matches(@"^Expo(nent)?PushToken\[.+\]$").WithMessage("Token không phải Expo push token.");
+        // Expo push token (điện thoại) hoặc FCM registration token (web); độ dài khớp cột Token
+        RuleFor(x => x.Token).NotEmpty().MaximumLength(PushTokenFormat.MaxLength)
+            .Must(token => PushTokenFormat.IsExpo(token) || PushTokenFormat.IsFcm(token))
+            .WithMessage("Token không phải Expo push token hoặc FCM registration token.");
         RuleFor(x => x.Platform).IsInEnum();
     }
 }

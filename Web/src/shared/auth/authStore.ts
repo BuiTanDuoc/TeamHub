@@ -4,6 +4,7 @@ import { authApi } from '../api/endpoints'
 import { queryClient } from '../api/queryClient'
 import { tokenStorage } from '../api/tokens'
 import type { AuthResult, AuthUser, MyTeam } from '../api/types'
+import { unregisterPushForLogout } from '../push/push'
 
 type Status = 'loading' | 'authenticated' | 'anonymous'
 
@@ -57,6 +58,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   logout: async () => {
     const refreshToken = tokenStorage.get()?.refreshToken
+    // Bắt đầu gỡ token push TRƯỚC khi xóa access token: header Authorization được gắn ngay lúc gọi nên request vẫn hợp lệ,
+    // và không bắt giao diện chờ nó xong mới đăng xuất.
+    const pushUnregistered = unregisterPushForLogout()
     tokenStorage.clear()
     set({ status: 'anonymous', user: null, teams: [] })
     queryClient.clear()
@@ -67,6 +71,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         /* thu hồi phía server thất bại thì bỏ qua: token đã bị xóa ở client */
       }
     }
+    await pushUnregistered
   },
 
   reloadMe: async () => {

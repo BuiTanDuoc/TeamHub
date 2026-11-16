@@ -7,6 +7,7 @@
     <ProjectReference Include="..\TeamHub.Application\TeamHub.Application.csproj" />
     <ProjectReference Include="..\TeamHub.Infrastructure\TeamHub.Infrastructure.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="FirebaseAdmin" />
     <PackageReference Include="Hangfire.AspNetCore" />
     <PackageReference Include="Hangfire.SqlServer" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />

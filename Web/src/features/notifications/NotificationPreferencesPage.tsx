@@ -10,6 +10,7 @@ import { PageHeader } from '@/shared/components/PageHeader'
 import { QueryBoundary } from '@/shared/components/QueryBoundary'
 import { useApiError } from '@/shared/hooks/useApiError'
 import { toast } from '@/shared/stores/uiStore'
+import { BrowserPushCard } from './BrowserPushCard'
 
 export default function NotificationPreferencesPage() {
   const { t } = useTranslation()
@@ -42,6 +43,7 @@ export default function NotificationPreferencesPage() {
         <Link to="/notifications">← {t('notifications.title')}</Link>
       </div>
       <PageHeader title={t('notifications.settings')} subtitle={t('notifications.settingsHint')} />
+      <BrowserPushCard />
       <QueryBoundary query={query}>
         {() => (
           <CCard>

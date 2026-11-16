@@ -11,6 +11,7 @@ export type NotificationType = 'TaskAssigned' | 'TaskCommented' | 'TaskStatusCha
 export type BugStatus =
   | 'New' | 'Confirmed' | 'Assigned' | 'InProgress' | 'Fixed' | 'ReadyToRetest' | 'Verified' | 'Closed' | 'Reopened'
   | 'WontFix' | 'Duplicate' | 'CannotReproduce'
+export type DevicePlatform = 'Android' | 'Ios' | 'Web'
 export type BugSeverity = 'Trivial' | 'Minor' | 'Major' | 'Critical'
 export type BugEnvironment = 'Dev' | 'Staging' | 'Production'
 

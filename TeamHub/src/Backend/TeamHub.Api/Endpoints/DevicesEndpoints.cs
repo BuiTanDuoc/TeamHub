@@ -20,7 +20,7 @@ public static class DevicesEndpoints
                 await mediator.Send(new RegisterDeviceTokenCommand(body.Token, body.Platform), ct);
                 return TypedResults.NoContent();
             })
-            .WithSummary("Đăng ký Expo push token của thiết bị cho tài khoản hiện tại (gọi lại mỗi lần mở app)")
+            .WithSummary("Đăng ký push token (Expo hoặc FCM) của thiết bị cho tài khoản hiện tại (gọi lại mỗi lần mở app)")
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
         group.MapDelete("/", async (string token, IMediator mediator, CancellationToken ct) =>

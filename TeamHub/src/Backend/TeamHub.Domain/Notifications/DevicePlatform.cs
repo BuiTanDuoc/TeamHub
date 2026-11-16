@@ -3,5 +3,6 @@ namespace TeamHub.Domain.Notifications;
 public enum DevicePlatform
 {
     Android = 0,
-    Ios = 1
+    Ios = 1,
+    Web = 2
 }

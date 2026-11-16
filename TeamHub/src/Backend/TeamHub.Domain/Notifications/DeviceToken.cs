@@ -2,7 +2,7 @@ using TeamHub.Domain.Common;
 
 namespace TeamHub.Domain.Notifications;
 
-/// <summary>Expo push token của một thiết bị. Một token chỉ thuộc một người dùng tại một thời điểm.</summary>
+/// <summary>Push token (Expo hoặc FCM) của một thiết bị. Một token chỉ thuộc một người dùng tại một thời điểm.</summary>
 public sealed class DeviceToken : AuditableEntity
 {
     private DeviceToken() { } // EF Core

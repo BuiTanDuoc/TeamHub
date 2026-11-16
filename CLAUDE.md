@@ -200,7 +200,7 @@ Nhánh phụ: WontFix, Duplicate, CannotReproduce (kèm lý do bắt buộc)
 
 - Phạm vi: xem/cập nhật việc của tôi, đổi trạng thái task/bug, comment, chụp ảnh báo bug, nhận push, dashboard rút gọn. Quản trị và báo cáo chi tiết để web đảm nhiệm.
 - Dùng chung `Shared` (API client, Zod schema) với web.
-- Push qua FCM (Expo Notifications). Cache offline bằng TanStack Query persist.
+- Push qua FCM (Expo Notifications). Cache offline bằng TanStack Query persist. Web nhận push qua FCM trực tiếp (xem Nhật ký quyết định 2026-11-16).
 
 ## 11. Test
 
@@ -282,6 +282,11 @@ pnpm gen:api
 | 2026-11-13 | Vô hiệu hóa tài khoản thu hồi mọi refresh token và xóa token push, giữ nguyên vai trò trong team; không tự vô hiệu hóa/thu quyền chính mình, luôn còn ít nhất một SystemAdmin hoạt động | Kích hoạt lại không mất dữ liệu; tránh khóa chết quản trị hệ thống. Access token đang dùng còn hiệu lực đến khi hết hạn |
 | 2026-11-13 | Người dùng tự sửa hồ sơ (`/api/v1/account/profile`, ảnh đại diện chỉ nhận https) và đổi mật khẩu (`/change-password`, thu hồi mọi phiên); thao tác băm/kiểm tra mật khẩu qua `IUserAdministration` (Infrastructure) | Application không phụ thuộc ASP.NET Identity |
 | 2026-11-12 | OpenAPI built-in (`AddOpenApi`) + Swagger UI tại `/swagger` (chỉ Development), khai báo JWT Bearer qua transformer | Thử API có token ngay trên Swagger; `Shared` sinh client từ `/openapi/v1.json` |
+| 2026-11-16 | Push trình duyệt qua Firebase Cloud Messaging (Firebase Admin SDK, HTTP v1): `FcmPushSender` + `PushRouter` chọn kênh theo định dạng token (`ExponentPushToken[...]` → Expo, còn lại → FCM); `Push:Fcm:Enabled` mặc định tắt, credential qua `Push:Fcm:CredentialFile`/`CredentialJson` (user-secrets/biến môi trường) hoặc Application Default Credentials | Giữ Expo cho mobile, thêm FCM cho web mà `NotificationDispatcher` không đổi; mỗi kênh bật/tắt riêng, một kênh lỗi không làm mất tin của kênh kia |
+| 2026-11-16 | Thêm `DevicePlatform.Web`; nới cột `DeviceTokens.Token` 200 → 512 (migration `FcmDeviceToken`); `PushTokenFormat` (Application) kiểm tra định dạng Expo/FCM | FCM token dài hơn Expo token; platform lưu dạng chuỗi nên thêm giá trị enum không cần đổi schema |
+| 2026-11-16 | Tin FCM chỉ có `data` (kèm `title`/`body`), không dùng `notification`; chỉ xóa token khi FCM trả `UNREGISTERED` | Service worker web tự dựng thông báo và quyết định đích khi bấm; lỗi khác (quota, sai project) không được làm mất token hợp lệ |
+| 2026-11-16 | Web: service worker `public/firebase-messaging-sw.js` không nạp Firebase SDK, bỏ qua push khi có tab TeamHub đang hiển thị (SignalR đã báo); token lấy bằng `firebase/messaging` nạp muộn, đăng ký lại mỗi lần mở app, gỡ khỏi backend khi đăng xuất, cờ bật push lưu theo trình duyệt | Tránh trùng thông báo với toast realtime; máy dùng chung không nhận push của tài khoản cũ |
+| 2026-11-16 | Nâng `Google.Apis.Auth` 1.68.0 → 1.73.0 | `FirebaseAdmin` 3.6.0 yêu cầu `Google.Apis.Auth >= 1.73.0` |
 
 ## 15. Lộ trình gợi ý
 |----------------+---------------------------------------------------------------------------------------------------+----------------------|

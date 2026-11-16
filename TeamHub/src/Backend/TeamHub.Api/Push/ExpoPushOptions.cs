@@ -1,6 +1,6 @@
 namespace TeamHub.Api.Push;
 
-/// <summary>Cấu hình gửi push qua Expo Push Service (Expo chuyển tiếp tới FCM/APNs), mục "Push:Expo".</summary>
+/// <summary>Cấu hình gửi push tới điện thoại qua Expo Push Service (Expo chuyển tiếp tới FCM/APNs), mục "Push:Expo".</summary>
 public sealed class ExpoPushOptions
 {
     public const string SectionName = "Push:Expo";

@@ -219,11 +219,22 @@
     "viewAll": "Xem tất cả",
     "unreadOnly": "Chỉ chưa đọc",
     "settings": "Cài đặt thông báo",
-    "settingsHint": "Chọn sự kiện nào sẽ báo cho bạn trong ứng dụng và trên push điện thoại.",
+    "settingsHint": "Chọn sự kiện nào sẽ báo cho bạn trong ứng dụng và trên push (điện thoại, trình duyệt).",
     "eventType": "Sự kiện",
     "inApp": "Trong app",
-    "push": "Push điện thoại",
-    "bothOffHint": "Tắt cả hai cho một sự kiện nghĩa là sẽ không tạo thông báo."
+    "push": "Push (điện thoại, trình duyệt)",
+    "bothOffHint": "Tắt cả hai cho một sự kiện nghĩa là sẽ không tạo thông báo.",
+    "browserPush": {
+      "title": "Thông báo đẩy trên trình duyệt này",
+      "hint": "Nhận thông báo hệ thống ngay cả khi bạn không mở TeamHub. Cài đặt này chỉ áp dụng cho trình duyệt đang dùng.",
+      "enabledToast": "Đã bật thông báo đẩy trên trình duyệt này",
+      "disabledToast": "Đã tắt thông báo đẩy trên trình duyệt này",
+      "permissionNotGranted": "Bạn chưa cho phép thông báo cho trang này",
+      "failed": "Không thể thiết lập thông báo đẩy, vui lòng thử lại",
+      "unsupported": "Trình duyệt này không hỗ trợ thông báo đẩy (Safari trên iOS cần thêm TeamHub vào Màn hình chính trước).",
+      "notConfigured": "Thông báo đẩy chưa được cấu hình trên máy chủ này (thiếu biến VITE_FIREBASE_*).",
+      "denied": "Trình duyệt đang chặn thông báo của trang này. Hãy cho phép trong cài đặt trang (biểu tượng ổ khóa cạnh thanh địa chỉ) rồi tải lại trang."
+    }
   },
   "enums": {
     "teamRole": {

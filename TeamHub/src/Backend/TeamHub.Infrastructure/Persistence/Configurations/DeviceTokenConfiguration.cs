@@ -13,7 +13,8 @@ public sealed class DeviceTokenConfiguration : IEntityTypeConfiguration<DeviceTo
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedNever();
 
-        builder.Property(x => x.Token).HasMaxLength(200).IsRequired();
+        // FCM token dài hơn Expo token (thường 150-200 ký tự, có thể hơn) nên chừa dư; 512 byte x2 vẫn dưới giới hạn khóa index 1700 byte
+        builder.Property(x => x.Token).HasMaxLength(512).IsRequired();
         builder.Property(x => x.Platform).HasConversion<string>().HasMaxLength(16).IsRequired();
 
         builder.HasOne<AppUser>()

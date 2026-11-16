@@ -220,11 +220,22 @@
     "viewAll": "View all",
     "unreadOnly": "Unread only",
     "settings": "Notification settings",
-    "settingsHint": "Choose which events notify you in the app and on mobile push.",
+    "settingsHint": "Choose which events notify you in the app and via push (mobile, browser).",
     "eventType": "Event",
     "inApp": "In app",
-    "push": "Mobile push",
-    "bothOffHint": "Turning both off for an event means no notification is created."
+    "push": "Push (mobile, browser)",
+    "bothOffHint": "Turning both off for an event means no notification is created.",
+    "browserPush": {
+      "title": "Push notifications in this browser",
+      "hint": "Get system notifications even when TeamHub is not open. This setting only applies to the browser you are using.",
+      "enabledToast": "Push notifications enabled in this browser",
+      "disabledToast": "Push notifications disabled in this browser",
+      "permissionNotGranted": "Notification permission was not granted for this site",
+      "failed": "Could not set up push notifications, please try again",
+      "unsupported": "This browser does not support push notifications (Safari on iOS requires adding TeamHub to the Home Screen first).",
+      "notConfigured": "Push notifications are not configured on this server (missing VITE_FIREBASE_* variables).",
+      "denied": "Your browser is blocking notifications for this site. Allow them in the site settings (lock icon next to the address bar), then reload the page."
+    }
   },
   "enums": {
     "teamRole": {

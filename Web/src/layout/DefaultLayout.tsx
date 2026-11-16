@@ -1,6 +1,7 @@
 import { CContainer, CSpinner } from '@coreui/react'
 import { Suspense } from 'react'
 import { Outlet } from 'react-router-dom'
+import { usePushLifecycle } from '@/shared/push/usePushLifecycle'
 import { useNotificationHub } from '@/shared/realtime/useNotificationHub'
 import { AppFooter } from './AppFooter'
 import { AppHeader } from './AppHeader'
@@ -9,6 +10,8 @@ import { AppSidebar } from './AppSidebar'
 export default function DefaultLayout() {
   // Layout chỉ render khi đã đăng nhập (RequireAuth) nên luôn mở kết nối realtime ở đây
   useNotificationHub(true)
+  // Làm mới đăng ký push FCM của trình duyệt (nếu người dùng đã bật) và xử lý khi bấm thông báo hệ thống
+  usePushLifecycle()
 
   return (
     <div>
